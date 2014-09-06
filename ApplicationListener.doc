@@ -1,0 +1,45 @@
+﻿public class MyGame implements ApplicationListener {
+   public void create () {
+   }
+
+   public void render () {        
+   }
+
+   public void resize (int width, int height) { 
+   }
+
+   public void pause () { 
+   }
+
+   public void resume () {
+   }
+
+   public void dispose () { 
+   }
+}
+
+
+
+
+create ()
+Method called once when the application is created.
+
+resize(int width, int height)
+This method is called every time the game screen is re-sized and the game is not in the paused state. It is also called once just after the create() method. The parameters are the new width and height the screen has been resized to in pixels.
+
+render ()
+Method called by the game loop from the application every time rendering should be performed. Game logic updates are usually also performed in this method.
+
+pause ()
+On Android this method is called when the Home button is pressed or an incoming call is received. On desktop this is called just before dispose() when exiting the application. A good place to save the game state.
+
+Resume ()
+This method is only called on Android, when the application resumes from a paused state.
+
+dispose ()
+Called when the application is destroyed. It is preceded by a call to pause().
+
+
+
+
+
