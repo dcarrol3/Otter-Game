@@ -37,7 +37,7 @@ public class MainMenu implements Screen {
         game.batch.end();
         
         // Checks if screen is clicked and runs game
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched() || Gdx.input.justTouched()) {
             game.setScreen(new GameScreen(game));
             dispose();
         }

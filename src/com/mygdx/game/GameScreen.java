@@ -26,7 +26,7 @@ public class GameScreen implements Screen {
 		
 		// Camera
 		 camera = new OrthographicCamera();
-	     camera.setToOrtho(false, 800, 600); // Screen size
+		 camera.setToOrtho(false, 800, 600); // Screen size
 	}
 
 	@Override
@@ -34,21 +34,21 @@ public class GameScreen implements Screen {
 		
 		// Clears screen and repaints with backround color
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-        
-        // Updates the screen
-        camera.update();
-        
-        
-        // Tells sprites to render on screen
-        game.batch.setProjectionMatrix(camera.combined);
-        
-        
-        //Start new sprite batch
-        game.batch.begin();
-        game.batch.draw(clam, 0, 0);   // Main clam
-        game.batch.end();
+	    
+	    // Updates the screen
+	    camera.update();
+	    
+	    
+	    // Tells sprites to render on screen
+	    game.batch.setProjectionMatrix(camera.combined);
+	    
+	    
+	    //Start new sprite batch
+	    game.batch.begin();
+	    game.batch.draw(clam, 0, 0);   // Main clam
+	    game.batch.end();
 	}
 
 	@Override
