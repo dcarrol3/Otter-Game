@@ -9,10 +9,9 @@ import com.badlogic.gdx.graphics.Texture;
 public class GameScreen implements Screen {
 	
 	final OtterGame game;
-	Texture playerSprite;
-	Texture clam;			// Main clam texture
-	Texture redClam;		// Double score clam texture
-	Texture purpClam;		// Turbo clam texture
+	Texture clam;					// Main clam texture
+	Texture redClam;				// Double score clam texture
+	Texture purpClam;				// Turbo clam texture
 	OrthographicCamera camera;		// Main game camera
 	Player player;
 	
@@ -24,7 +23,6 @@ public class GameScreen implements Screen {
 		clam = new Texture("yellowclam.png");
 		redClam = new Texture("redclam.png");
 		purpClam = new Texture("purpleclam.png");
-		playerSprite = new Texture("player.png");
 		
 		// Sounds
 		
@@ -52,7 +50,7 @@ public class GameScreen implements Screen {
 	    
 	    //Start new sprite batch
 	    game.batch.begin();
-	    game.batch.draw(playerSprite, player.getxCoord(), player.getyCoord());
+	    player.display(); 	// Display player sprite
 	    game.batch.end();
 	}
 

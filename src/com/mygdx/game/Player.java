@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 class Player {
 	
 	final OtterGame game;
-	public Texture player;
+	Texture playerSprite;
 	int clams;
 	private int xCoord;
 	private int yCoord;
@@ -15,6 +15,7 @@ class Player {
 	
 	public Player(final OtterGame gam){
 		this.game = gam;
+		playerSprite = new Texture("player.png");
 		// Set first position
 		xCoord = 675;
 		yCoord = 214;
@@ -34,9 +35,11 @@ class Player {
 	}
 
 	
+	void display(){
+		game.batch.draw(playerSprite, xCoord, yCoord);
+	}
 	
-	
-	void spawn(){
+	void respawn(){
 		
 		// reset position
 		xCoord = 675;
