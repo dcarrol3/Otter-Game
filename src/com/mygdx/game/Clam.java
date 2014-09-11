@@ -10,3 +10,4 @@ class Clam {
 	void movement(){}
 	
 }
+

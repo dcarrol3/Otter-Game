@@ -14,7 +14,7 @@ public class MainMenu implements Screen {
 		
 		game = gam;
 		camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 600); // Screen size to 800x600
+        camera.setToOrtho(false, 800, 480); // Screen size to 800x600
 	
 	}
 	

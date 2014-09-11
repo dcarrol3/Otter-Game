@@ -9,24 +9,28 @@ import com.badlogic.gdx.graphics.Texture;
 public class GameScreen implements Screen {
 	
 	final OtterGame game;
+	Texture playerSprite;
 	Texture clam;			// Main clam texture
 	Texture redClam;		// Double score clam texture
 	Texture purpClam;		// Turbo clam texture
 	OrthographicCamera camera;		// Main game camera
+	Player player;
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
+		player = new Player(game);
 		
 		// Textures
 		clam = new Texture("yellowclam.png");
 		redClam = new Texture("redclam.png");
 		purpClam = new Texture("purpleclam.png");
+		playerSprite = new Texture("player.png");
 		
 		// Sounds
 		
 		// Camera
 		 camera = new OrthographicCamera();
-		 camera.setToOrtho(false, 800, 600); // Screen size
+		 camera.setToOrtho(false, 800, 480); // Screen size
 	}
 
 	@Override
@@ -44,10 +48,11 @@ public class GameScreen implements Screen {
 	    // Tells sprites to render on screen
 	    game.batch.setProjectionMatrix(camera.combined);
 	    
+	    player.movement();
 	    
 	    //Start new sprite batch
 	    game.batch.begin();
-	    game.batch.draw(clam, 0, 0);   // Main clam
+	    game.batch.draw(playerSprite, player.getxCoord(), player.getyCoord());
 	    game.batch.end();
 	}
 
