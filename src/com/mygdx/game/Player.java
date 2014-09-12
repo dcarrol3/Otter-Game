@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 
 class Player {
 	
-	final OtterGame game;
-	Texture playerSprite;
-	int clams;
-	private int xCoord;
+	final OtterGame game; 
+	Texture playerSprite; // Player texture
+	int clams;			  // Number of clams for shooting	
+	private int xCoord;	  
 	private int yCoord;
-	final byte SPEED = 3;
+	final byte SPEED = 3; // Player speed
 	
 	public Player(final OtterGame gam){
 		this.game = gam;
