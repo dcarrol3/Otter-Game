@@ -47,14 +47,18 @@ public class GameScreen implements Screen {
 	    
 	    // Tells sprites to render on screen
 	    game.batch.setProjectionMatrix(camera.combined);
-	    
+	    // movements 
 	    player.movement();
+	    shark.movement();
 	    
 	    //Start new sprite batch
 	    game.batch.begin();
 	    player.display(); 	// Display player sprite
-	    shark.display();    // Display shark
+	    shark.display(); 	// display shark sprite
 	    game.batch.end();
+	    
+	    // start new shark sprite batch
+	  
 	}
 
 	@Override
