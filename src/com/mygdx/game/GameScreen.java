@@ -14,10 +14,12 @@ public class GameScreen implements Screen {
 	Texture purpClam;				// Turbo clam texture
 	OrthographicCamera camera;		// Main game camera
 	Player player;
+	Shark shark;
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
 		player = new Player(game);
+		shark = new Shark(game);
 		
 		// Textures
 		clam = new Texture("yellowclam.png");
@@ -51,6 +53,7 @@ public class GameScreen implements Screen {
 	    //Start new sprite batch
 	    game.batch.begin();
 	    player.display(); 	// Display player sprite
+	    shark.display();    // Display shark
 	    game.batch.end();
 	}
 

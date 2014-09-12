@@ -14,13 +14,14 @@ class Shark  {
 	// create an array of sharks and have them randomly spawn
 	// spawn coordinates
 	public Shark(final OtterGame gam) {
+		
 		this.game = gam;
 		
-		sharkSprite = new Texture("shark.pdf");
+		sharkSprite = new Texture("shark.png");
 		speed = 3;
 		rand = new Random();
 		xCoord = -100;
-		yCoord = rand.nextInt(480);
+		yCoord = rand.nextInt(440)+20;
 	}
 	
 	
@@ -44,7 +45,9 @@ class Shark  {
 		return yCoord;
 	}
 
-
+	public void display() {
+		game.batch.draw(sharkSprite, xCoord, yCoord);
+	}
 	
 	
 	
