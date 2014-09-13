@@ -5,6 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen {
 	
@@ -18,6 +20,7 @@ public class GameScreen implements Screen {
 	final byte STARTINGSHARKS = 5;	// Number of sharks to start with
 	final byte MAXSHARKS = 20;
 	byte numSharks = STARTINGSHARKS;
+	Array<Rectangle> sharks;
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
@@ -58,6 +61,9 @@ public class GameScreen implements Screen {
 	    // movements 
 	    player.movement();
 	    moveSharks();
+	    
+	    // collision check
+	    sharkCollison();
 	    
 	    //Start new sprite batch
 	    game.batch.begin();
@@ -108,16 +114,29 @@ public class GameScreen implements Screen {
 		
 	}
 	
-	// Move 
+	// Move  sharks
 	private void moveSharks(){
 		for (int i = 0; i < numSharks; i++) {
 			sharkArray[i].movement();
 		}
 	}
-	
+	// display sharks
 	private void displaySharks(){
 		for (int i = 0; i < numSharks; i++) {
 			sharkArray[i].display();
 		}
+	}
+	// check for shark collison and reset
+	private void sharkCollison() {
+		for (int i = 0; i < numSharks; i++)  { 
+			for (int j = 0; j < numSharks; j++) {
+				if(sharkArray[i].hitBox.overlaps(sharkArray[j].hitBox) && i != j){ 
+					sharkArray[i].respawnShark();
+					sharkArray[j].respawnShark();
+				}
+			}
+		}
+			
+		
 	}
 }
