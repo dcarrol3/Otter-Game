@@ -14,12 +14,20 @@ public class GameScreen implements Screen {
 	Texture purpClam;				// Turbo clam texture
 	OrthographicCamera camera;		// Main game camera
 	Player player;
-	Shark shark;
+	Shark[] sharkArray;
+	final byte STARTINGSHARKS = 5;	// Number of sharks to start with
+	final byte MAXSHARKS = 20;
+	byte numSharks = STARTINGSHARKS;
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
 		player = new Player(game);
-		shark = new Shark(game);
+		
+		// Build shark array
+		sharkArray = new Shark[MAXSHARKS];
+		for (int i = 0; i < STARTINGSHARKS; i++) {
+			sharkArray[i] = new Shark(game);
+		}
 		
 		// Textures
 		clam = new Texture("yellowclam.png");
@@ -36,7 +44,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		
-		// Clears screen and repaints with backround color
+		// Clears screen and repaints with background color
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -49,12 +57,12 @@ public class GameScreen implements Screen {
 	    game.batch.setProjectionMatrix(camera.combined);
 	    // movements 
 	    player.movement();
-	    shark.movement();
+	    moveSharks();
 	    
 	    //Start new sprite batch
 	    game.batch.begin();
 	    player.display(); 	// Display player sprite
-	    shark.display(); 	// display shark sprite
+	    displaySharks(); 	// Display shark sprite
 	    game.batch.end();
 	    
 	    // start new shark sprite batch
@@ -98,5 +106,18 @@ public class GameScreen implements Screen {
 		redClam.dispose();
 		purpClam.dispose();
 		
+	}
+	
+	// Move 
+	private void moveSharks(){
+		for (int i = 0; i < numSharks; i++) {
+			sharkArray[i].movement();
+		}
+	}
+	
+	private void displaySharks(){
+		for (int i = 0; i < numSharks; i++) {
+			sharkArray[i].display();
+		}
 	}
 }
