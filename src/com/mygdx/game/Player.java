@@ -8,10 +8,13 @@ class Player {
 	
 	final OtterGame game; 
 	Texture playerSprite; // Player texture
+	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
+	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
+	public final byte SPEED = 3; // Player speed
 	int clams;			  // Number of clams for shooting	
 	private int xCoord;	  
 	private int yCoord;
-	final byte SPEED = 3; // Player speed
+	
 	
 	public Player(final OtterGame gam){
 		this.game = gam;
@@ -115,6 +118,7 @@ class Player {
 	void movement(){
 		
 		String direction = playerInput();
+		boundries();
 		
 		// Left
 		if(direction.equals("left"))
@@ -129,7 +133,7 @@ class Player {
 		// Left and down
 		if(direction.equals("left-down")){
 			yCoord -= SPEED;
-			xCoord += SPEED;
+			xCoord -= SPEED;
 		}
 		
 		// Right
@@ -167,5 +171,19 @@ class Player {
 	
 	void removeClam(){}
 	
-	
+	// Confine player to playable area
+	void boundries(){
+		
+		// Width boundary
+		if(xCoord <= 0) // Left boundary
+			xCoord = 0;
+		else if(xCoord + SPRITEWIDTH >= game.getWidth())
+			xCoord = game.getWidth() - SPRITEWIDTH; // Right boundary
+		
+		// Height boundary
+		if(yCoord <= 0) // Lower boundary
+			yCoord = 0;
+		else if(yCoord + SPRITEHEIGHT>= game.getHeight())
+			yCoord = game.getHeight() - SPRITEHEIGHT; // Upper boundary
+	}
 }
