@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 class Player {
 	
@@ -10,18 +11,36 @@ class Player {
 	Texture playerSprite; // Player texture
 	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
 	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
-	public final byte SPEED = 3; // Player speed
-	int clams;			  // Number of clams for shooting	
-	private int xCoord;	  
-	private int yCoord;
-	
+	public final byte SPEED = 3; 			// Player speed
+	int clams;			  					// Number of clams for shooting	
+	private int xCoord;	  					// Player x coord
+	private int yCoord;						// Player y coord
+	Rectangle hitBox;	  					// Set hitbox for player
+	Life[] lifeArray;
+	public final int MAXLIVES = 5;			// Max lives
+	private int lives = 3;					// Starting lives
+	public final int INVINTIME = 5;			// Time in seconds for otter to be invincible
+	private long time = 0;					// Keep track of time
+	private long timer = 0;					// Used to add to time
 	
 	public Player(final OtterGame gam){
 		this.game = gam;
 		playerSprite = new Texture("player.png");
+		
 		// Set first position
 		xCoord = 675;
 		yCoord = 214;
+		
+		// construct hitbox
+		hitBox = new Rectangle(); 
+		hitBox.setSize(150, 50); // Set size of rectangle
+		hitBox.setPosition(xCoord, yCoord); // Match loaction with shark
+		
+		// Build lives
+		lifeArray = new Life[MAXLIVES];
+		for (int i = 0; i < MAXLIVES; i++) {
+			lifeArray[i] = new Life(game);
+		}
 	}
 	
 	
@@ -39,7 +58,16 @@ class Player {
 
 	
 	void display(){
+		int lifex = 50;
+		
 		game.batch.draw(playerSprite, xCoord, yCoord);
+		
+		// Display life
+		for (int i = 0; i < lives; i++) {
+			lifeArray[i].display(lifex);
+			lifex += 50;
+		}
+		lifex = 50;
 	}
 	
 	void respawn(){
@@ -160,10 +188,27 @@ class Player {
 		if(direction.equals("up"))
 			yCoord += SPEED;
 		
+		hitBox.setPosition(xCoord, yCoord); // Match location with shark
+	}
+	
+	//Player hits a shark
+	void hitByShark(){
+		
+		time = System.currentTimeMillis();
+		// Set time and timer
+		if(timer == 0){
+			timer = time + (INVINTIME * 1000);
+			lives--;
+		}
+			
+		// If invincible time is up
+		if(timer != 0 && time > timer)
+			timer = 0;
 		
 	}
 	
-	void hit(){}
+	// Player hits a clam
+	void hitByClam(){}
 	
 	void fire(){}
 	
@@ -186,4 +231,10 @@ class Player {
 		else if(yCoord + SPRITEHEIGHT>= game.getHeight())
 			yCoord = game.getHeight() - SPRITEHEIGHT; // Upper boundary
 	}
+	
+	void addlife(){}
+	
+	void removeLife(){}
+	
+	void dead(){}
 }

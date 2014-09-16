@@ -20,7 +20,7 @@ public class GameScreen implements Screen {
 	final byte STARTINGSHARKS = 5;	// Number of sharks to start with
 	final byte MAXSHARKS = 20;
 	byte numSharks = STARTINGSHARKS;
-	Array<Rectangle> sharks;
+	Array<Rectangle> sharks;	
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
@@ -62,8 +62,8 @@ public class GameScreen implements Screen {
 	    player.movement();
 	    moveSharks();
 	    
-	    // collision check
-	    sharkCollison();
+	    // collision check with sharks and player
+	    sharkCollision();
 	    
 	    //Start new sprite batch
 	    game.batch.begin();
@@ -126,15 +126,20 @@ public class GameScreen implements Screen {
 			sharkArray[i].display();
 		}
 	}
-	// check for shark collison and reset
-	private void sharkCollison() {
+	// collision check with sharks and player
+	private void sharkCollision() {
 		for (int i = 0; i < numSharks; i++)  { 
 			for (int j = 0; j < numSharks; j++) {
+				// Shark hits shark
 				if(sharkArray[i].hitBox.overlaps(sharkArray[j].hitBox) && i != j){ 
 					sharkArray[i].respawnShark();
 					sharkArray[j].respawnShark();
 				}
-			}
+				// Player hits shark
+				if(sharkArray[j].hitBox.overlaps(player.hitBox))
+					player.hitByShark();
+				
+				}
 		}
 			
 		

@@ -13,7 +13,7 @@ class Shark  {
 	Random rand;
 	final OtterGame game;
 	
-	// setting boundary of sharks
+	// Setting boundary of sharks
 	Rectangle hitBox;
 	
 	// create an array of sharks and have them randomly spawn
