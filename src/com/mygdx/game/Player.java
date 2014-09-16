@@ -16,7 +16,7 @@ class Player {
 	private int xCoord;	  					// Player x coord
 	private int yCoord;						// Player y coord
 	Rectangle hitBox;	  					// Set hitbox for player
-	Life[] lifeArray;
+	Life[] lifeArray;						// Life holder
 	public final int MAXLIVES = 5;			// Max lives
 	private int lives = 3;					// Starting lives
 	public final int INVINTIME = 5;			// Time in seconds for otter to be invincible
@@ -54,6 +54,10 @@ class Player {
 	// Getter for yCoord
 	public int getyCoord() {
 		return yCoord;
+	}
+	
+	public int getLives() {
+		return lives;
 	}
 
 	
@@ -236,5 +240,4 @@ class Player {
 	
 	void removeLife(){}
 	
-	void dead(){}
 }

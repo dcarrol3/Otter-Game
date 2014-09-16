@@ -64,6 +64,7 @@ public class GameScreen implements Screen {
 	    
 	    // collision check with sharks and player
 	    sharkCollision();
+	    ifDead();
 	    
 	    //Start new sprite batch
 	    game.batch.begin();
@@ -108,10 +109,8 @@ public class GameScreen implements Screen {
 	// Disposes of objects on screen
 	@Override
 	public void dispose() {
-		clam.dispose();
-		redClam.dispose();
-		purpClam.dispose();
 		
+		game.setScreen(new GameOver(game));
 	}
 	
 	// Move  sharks
@@ -143,5 +142,10 @@ public class GameScreen implements Screen {
 		}
 			
 		
+	}
+	void ifDead(){
+		
+		if(player.getLives() <= 0)
+			dispose();
 	}
 }
