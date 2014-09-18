@@ -9,13 +9,17 @@ public class MainMenu implements Screen {
 	
 	final OtterGame game;
 	OrthographicCamera camera;	// Main menu camera
+	Button startButton;			// Main start button
 	
 	public MainMenu(final OtterGame gam){
 		
 		game = gam;
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480); // Screen size to 800x600
-	
+        
+        // Creates buttons
+        createButtons();
+        
 	}
 	
 	
@@ -32,15 +36,14 @@ public class MainMenu implements Screen {
         
         // Sprite batch
         game.batch.begin();
-        game.font.draw(game.batch, "Otter Game ", 100, 150);
-        game.font.draw(game.batch, "Click anywhere to begin!", 100, 100);
+        displaySprites();
         game.batch.end();
         
-        // Checks if screen is clicked and runs game
-        if (Gdx.input.isTouched() || Gdx.input.justTouched()) {
-            game.setScreen(new GameScreen(game));
-            dispose();
-        }
+        // Checks if button is clicked and runs game
+        
+    	if (startButton.isPressed()) 
+    		game.setScreen(new GameScreen(game));
+        	
     }
 
 
@@ -83,5 +86,17 @@ public class MainMenu implements Screen {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	void displaySprites(){
+		 game.font.draw(game.batch, "Otter Game ", 108, 180);
+		 startButton.display();
+	}
+	
+	// Creates buttons
+	void createButtons(){
+		// Create start button
+        startButton = new Button(game, "start_np.png", 94, 47, 100, 100);
+        startButton.setPressedTexture("start_p.png");
 	}
 }

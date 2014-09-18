@@ -4,18 +4,19 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+
 public class OtterGame extends Game {
 	
-	short HEIGHT = 480;
-	short WIDTH = 800;
+	int HEIGHT = 480;
+	int WIDTH = 800;
 	SpriteBatch batch;
 	BitmapFont font;        // Default font
 	
 	
 	// Getter for screen height
-	public short getHeight(){return HEIGHT;}
+	public int getHeight(){return HEIGHT;}
 	// Getter for screen width
-	public short getWidth(){return WIDTH;}
+	public int getWidth(){return WIDTH;}
 	
 	
 	// Creates the game
@@ -25,7 +26,8 @@ public class OtterGame extends Game {
 		batch = new SpriteBatch();
 		
 		// Font
-		font = new BitmapFont();
+		fonts();
+		
 		
 		// Run Main Menu
 		this.setScreen(new MainMenu(this));
@@ -43,4 +45,10 @@ public class OtterGame extends Game {
         batch.dispose();
         font.dispose();
     }
+	
+	
+	void fonts(){
+		// Fonts
+		font = new BitmapFont();
+	}
 }

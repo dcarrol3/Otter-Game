@@ -19,7 +19,7 @@ class Player {
 	Life[] lifeArray;						// Life holder
 	public final int MAXLIVES = 5;			// Max lives
 	private int lives = 3;					// Starting lives
-	public final int INVINTIME = 5;			// Time in seconds for otter to be invincible
+	public final int INVINTIME = 3;			// Time in seconds for otter to be invincible
 	private long time = 0;					// Keep track of time
 	private long timer = 0;					// Used to add to time
 	

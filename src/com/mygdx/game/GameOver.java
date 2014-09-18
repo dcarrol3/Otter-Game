@@ -30,12 +30,11 @@ public class GameOver implements Screen {
         
         // Sprite batch
         game.batch.begin();
-        game.font.draw(game.batch, "DEATH ", 100, 150);
-        game.font.draw(game.batch, "Click anywhere to begin!", 100, 100);
+        game.font.draw(game.batch, "DEATH ", 350, 240);
         game.batch.end();
         
         // Checks if screen is clicked and runs game
-        if (Gdx.input.isTouched() || Gdx.input.justTouched()) {
+        if (Gdx.input.isTouched() || Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(game));
             dispose();
         }
