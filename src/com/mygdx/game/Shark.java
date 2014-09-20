@@ -1,3 +1,7 @@
+// Otter game
+// Sharks
+// By Doug Carroll and Jon Jordan
+
 package com.mygdx.game;
 
 import java.util.Random;

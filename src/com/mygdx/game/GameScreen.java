@@ -1,3 +1,7 @@
+// Otter Game
+// Main game screen
+// By Doug Carroll and Jon Jordan
+
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
@@ -11,16 +15,13 @@ import com.badlogic.gdx.utils.Array;
 public class GameScreen implements Screen {
 	
 	final OtterGame game;
-	Texture clam;					// Main clam texture
-	Texture redClam;				// Double score clam texture
-	Texture purpClam;				// Turbo clam texture
 	OrthographicCamera camera;		// Main game camera
-	Player player;
-	Shark[] sharkArray;
-	final byte STARTINGSHARKS = 5;	// Number of sharks to start with
-	final byte MAXSHARKS = 20;
-	byte numSharks = STARTINGSHARKS;
-	Array<Rectangle> sharks;	
+	Texture background;				// Background texture
+	Player player;					// Player or otter
+	Shark[] sharkArray;				// Shark array
+	final int STARTINGSHARKS = 5;	// Number of sharks to start with
+	final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
+	int numSharks = STARTINGSHARKS; // Keeps track of number of sharks
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
@@ -33,10 +34,7 @@ public class GameScreen implements Screen {
 		}
 		
 		// Textures
-		clam = new Texture("yellowclam.png");
-		redClam = new Texture("redclam.png");
-		purpClam = new Texture("purpleclam.png");
-		
+		background = new Texture("gamebackground.png");
 		// Sounds
 		
 		// Camera
@@ -66,9 +64,10 @@ public class GameScreen implements Screen {
 	    sharkCollision();
 	    ifDead();
 	    
-	    //Start new sprite batch
+	    //Start new sprite batch - Backround MUST be first!
 	    game.batch.begin();
-	    player.display(); 	// Display player sprite
+	    game.batch.draw(background, 0, 0); // Background
+	    player.display(); 	// Display player sprite - Must be before sharks
 	    displaySharks(); 	// Display shark sprite
 	    game.batch.end();
 	    

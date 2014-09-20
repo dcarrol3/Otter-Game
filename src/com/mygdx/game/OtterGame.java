@@ -1,3 +1,7 @@
+// Otter game
+// Main window class
+// By Doug Carroll and Jon Jordan
+
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;

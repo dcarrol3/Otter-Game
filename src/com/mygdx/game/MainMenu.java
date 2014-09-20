@@ -1,3 +1,7 @@
+// Otter game
+// Main Menu
+// By Doug Carroll and Jon Jordan
+
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
@@ -10,6 +14,7 @@ public class MainMenu implements Screen {
 	final OtterGame game;
 	OrthographicCamera camera;	// Main menu camera
 	Button startButton;			// Main start button
+	Button quitButton;			// Menu quit button
 	
 	public MainMenu(final OtterGame gam){
 		
@@ -39,11 +44,14 @@ public class MainMenu implements Screen {
         displaySprites();
         game.batch.end();
         
-        // Checks if button is clicked and runs game
-        
-    	if (startButton.isPressed()) 
+        // Checks if start is clicked and runs game
+        if (startButton.isPressed()){ 
+        	dispose();
     		game.setScreen(new GameScreen(game));
-        	
+        }
+        // Checks if quit is hit and exits game
+        if(quitButton.isPressed())
+        	System.exit(0);	
     }
 
 
@@ -85,18 +93,24 @@ public class MainMenu implements Screen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
+		startButton.dispose();
+		quitButton.dispose();
 		
 	}
 	
 	void displaySprites(){
 		 game.font.draw(game.batch, "Otter Game ", 108, 180);
 		 startButton.display();
+		 quitButton.display();
 	}
 	
 	// Creates buttons
 	void createButtons(){
 		// Create start button
-        startButton = new Button(game, "start_np.png", 94, 47, 100, 100);
+        startButton = new Button(game, "start_np.png", 84, 43, 100, 100);
         startButton.setPressedTexture("start_p.png");
+        // Create quit button
+        quitButton = new Button(game, "quit_np.png", 84, 43, 600, 100);
+        quitButton.setPressedTexture("quit_p.png");
 	}
 }

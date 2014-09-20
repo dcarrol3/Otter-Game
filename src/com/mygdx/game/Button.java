@@ -96,4 +96,9 @@ public class Button {
 		else
 			game.batch.draw(button, xCoord, yCoord);
 	}
+	
+	void dispose(){
+		button.dispose();
+		highlightedTexture.dispose();
+	}
 }

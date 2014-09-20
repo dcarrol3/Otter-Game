@@ -1,3 +1,7 @@
+// Otter game
+// Game Over screen
+// By Doug Carroll and Jon Jordan
+
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
@@ -30,7 +34,7 @@ public class GameOver implements Screen {
         
         // Sprite batch
         game.batch.begin();
-        game.font.draw(game.batch, "DEATH ", 350, 240);
+        display();
         game.batch.end();
         
         // Checks if screen is clicked and runs game
@@ -73,6 +77,14 @@ public class GameOver implements Screen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	void display(){
+		 game.font.draw(game.batch, "DEATH ", 350, 240);
+	}
+	
+	void buttons(){
 		
 	}
 
