@@ -4,6 +4,8 @@
 
 package com.mygdx.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,12 +13,13 @@ import com.badlogic.gdx.math.Rectangle;
 
 class Player {
 	
-	final OtterGame game; 
+	final OtterGame game;
 	Texture playerSprite; // Player texture
 	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
 	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
 	public final byte SPEED = 3; 			// Player speed
-	int clams;			  					// Number of clams for shooting	
+	private int ammo;			  			// Number of clams for shooting
+	public final double  SHOTDELAY = .1;    // Delay between shots in seconds
 	private int xCoord;	  					// Player x coord
 	private int yCoord;						// Player y coord
 	Rectangle hitBox;	  					// Set hitbox for player
@@ -24,12 +27,14 @@ class Player {
 	public final int MAXLIVES = 5;			// Max lives
 	private int lives = 3;					// Starting lives
 	public final int INVINTIME = 3;			// Time in seconds for otter to be invincible
-	private long time = 0;					// Keep track of time
-	private long timer = 0;					// Used to add to time
+	private long timer = 0;					// Timer for hitting sharks
+	ArrayList<Bullet> bulletList;			// Handles bullets
 	
-	public Player(final OtterGame gam){
+	public Player(final OtterGame gam, ArrayList<Bullet> bulletList){
 		this.game = gam;
+		this.bulletList = bulletList;
 		playerSprite = new Texture("player.png");
+		ammo = 5;
 		
 		// Set first position
 		xCoord = 675;
@@ -49,6 +54,10 @@ class Player {
 	
 	
 	
+	public int getAmmo() {
+		return ammo;
+	}
+
 	// Getter for xCoord
 	public int getxCoord() {
 		return xCoord;
@@ -65,10 +74,10 @@ class Player {
 	}
 
 	
-	void display(){
+	void display(){game.batch.draw(playerSprite, xCoord, yCoord);}
+	
+	void displayLife(){
 		int lifex = 50;
-		
-		game.batch.draw(playerSprite, xCoord, yCoord);
 		
 		// Display life
 		for (int i = 0; i < lives; i++) {
@@ -202,27 +211,35 @@ class Player {
 	//Player hits a shark
 	void hitByShark(){
 		
-		time = System.currentTimeMillis();
+		long time = System.currentTimeMillis();
 		// Set time and timer
 		if(timer == 0){
-			timer = time + (INVINTIME * 1000);
-			lives--;
+		timer = time + (INVINTIME * 1000);
+		lives--;
 		}
-			
 		// If invincible time is up
 		if(timer != 0 && time > timer)
-			timer = 0;
-		
+		timer = 0;
 	}
 	
 	// Player hits a clam
-	void hitByClam(){}
+	void hitByClam(){
+		ammo++;
+	}
 	
-	void fire(){}
+	// Checks shot delay
+	void fireCheck(){
+		
+		if(Gdx.input.isKeyJustPressed(Keys.SPACE) && ammo > 0)
+				fire();
+	}
 	
-	void addClam(){}
-	
-	void removeClam(){}
+	void fire(){
+		
+		bulletList.add(new Bullet(game, xCoord, yCoord));
+		ammo--;
+		
+	}
 	
 	// Confine player to playable area
 	void boundries(){

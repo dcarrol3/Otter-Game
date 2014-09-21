@@ -1,6 +1,0 @@
-OtterGame
-MainMenu
-GameScreen --> (will include methods to run everything)
-Clams
-Sharks
-Player

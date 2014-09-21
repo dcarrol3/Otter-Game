@@ -62,7 +62,7 @@ public class Button {
 	
 	
 	// Set different highlighted button texture
-	void setPressedTexture(String file){
+	public void setPressedTexture(String file){
 		highlightedTexture = new Texture(file);
 	}
 	
@@ -77,7 +77,7 @@ public class Button {
 	}
 	
 	// Checks if button is hovered over by mouse
-	boolean isHighlighted(){
+	private boolean isHighlighted(){
 		int x = Gdx.input.getX();
 		int y = Gdx.input.getY();
 		boolean highlighted = false;
@@ -89,7 +89,7 @@ public class Button {
 		return highlighted;
 	}
 	
-	
+	// Displays buttons
 	void display(){
 		if(isHighlighted())
 			game.batch.draw(highlightedTexture, xCoord, yCoord);
@@ -97,6 +97,7 @@ public class Button {
 			game.batch.draw(button, xCoord, yCoord);
 	}
 	
+	// Kills texture objects
 	void dispose(){
 		button.dispose();
 		highlightedTexture.dispose();
