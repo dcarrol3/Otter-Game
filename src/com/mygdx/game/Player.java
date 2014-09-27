@@ -217,6 +217,7 @@ class Player {
 		if(timer == 0){
 		timer = time + (INVINTIME * 1000);
 		lives--;
+		lifeArray[lives].dispose(); // Dispose of life
 		}
 		// If invincible time is up
 		if(timer != 0 && time > timer)
@@ -261,5 +262,11 @@ class Player {
 	void addlife(){}
 	
 	void removeLife(){}
+
+
+	// Garbage collection
+	void dispose() {
+		playerSprite.dispose();
+	}
 	
 }

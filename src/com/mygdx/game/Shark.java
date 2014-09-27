@@ -16,12 +16,8 @@ class Shark  {
 	private int speed;			// Speed of sharks
 	Random rand;
 	final OtterGame game;
-	
-	// Setting boundary of sharks
-	Rectangle hitBox;
-	
-	// create an array of sharks and have them randomly spawn
-	// spawn coordinates
+	Rectangle hitBox;			// Hit box for sharks
+
 	public Shark(final OtterGame gam) {
 	
 		this.game = gam;
@@ -75,6 +71,10 @@ class Shark  {
 
 	public void display() {
 		game.batch.draw(sharkSprite, xCoord, yCoord);
+	}
+
+	void dispose() {
+		sharkSprite.dispose();
 	}
 	
 	

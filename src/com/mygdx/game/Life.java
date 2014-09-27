@@ -20,5 +20,10 @@ class Life {
 		
 		game.batch.draw(lifeSprite, xCoord, yCoord);
 	}
+
+	public void dispose() {
+		lifeSprite.dispose();
+		
+	}
 	
 }

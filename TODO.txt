@@ -1,5 +1,6 @@
 TODO list:
 
-Add dispose for all classes
 Add options page
 Add music/sounds
+Add shark speed/spawns or levels?
+Add clams

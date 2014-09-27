@@ -48,7 +48,9 @@ public class Bullet{
 		game.batch.draw(bullet, xCoord, yCoord);
 	}
 	
-	void dispose(){}
+	void dispose(){
+		bullet.dispose();
+	}
 	
 	
 }

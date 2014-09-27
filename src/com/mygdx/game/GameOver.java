@@ -83,11 +83,14 @@ public class GameOver implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// Dispose of textures
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		menu.dispose();
+		quit.dispose();
+		replay.dispose();
+		background.dispose();
 	}
 	
 	// Displays sprites

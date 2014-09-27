@@ -127,6 +127,13 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		music.stop(); // Stop music
+		background.dispose();
+		player.dispose();
+		
+		// Dispose of sharks
+		for (int i = 0; i < numSharks; i++)  {
+			sharkArray[i].dispose();
+		}
 	}
 	
 	
@@ -148,8 +155,10 @@ public class GameScreen implements Screen {
 			bulletList.get(i).display();
 			
 			// Check if bullet goes off screen
-			if(bulletList.get(i).getxCoord() < -100 || bulletList.get(i).getyCoord() < -100 || bulletList.get(i).getyCoord() > game.getHeight() + 100)
+			if(bulletList.get(i).getxCoord() < -100 || bulletList.get(i).getyCoord() < -100 || bulletList.get(i).getyCoord() > game.getHeight() + 100){
+					bulletList.get(i).dispose();	
 					bulletList.remove(bulletList.get(i));
+			}		
 		}
 	}
  	// collision check with sharks
