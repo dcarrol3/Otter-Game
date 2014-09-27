@@ -72,14 +72,15 @@ class Player {
 	public int getLives() {
 		return lives;
 	}
-
 	
+	
+	// Displays player
 	void display(){game.batch.draw(playerSprite, xCoord, yCoord);}
 	
+	// Displays life
 	void displayLife(){
 		int lifex = 50;
 		
-		// Display life
 		for (int i = 0; i < lives; i++) {
 			lifeArray[i].display(lifex);
 			lifex += 50;

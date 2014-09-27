@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,6 +25,7 @@ public class GameScreen implements Screen {
 	int numSharks = STARTINGSHARKS; // Keeps track of number of sharks
 	int score;						// Handles player score
 	ArrayList<Bullet> bulletList;	// Handles bullets
+	Music music;					// Background music
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
@@ -40,11 +42,14 @@ public class GameScreen implements Screen {
 		
 		// Textures
 		background = new Texture("gamebackground.png");
-		// Sounds
 		
+		// Sounds
+		music = Gdx.audio.newMusic(Gdx.files.internal("runaway.mp3")); // Load in music file
+		music.play(); // Play music
+		 
 		// Camera
-		 camera = new OrthographicCamera();
-		 camera.setToOrtho(false, 800, 480); // Screen size
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480); // Screen size
 	}
 
 	@Override
@@ -120,7 +125,9 @@ public class GameScreen implements Screen {
 	
 	// Disposes of objects on screen
 	@Override
-	public void dispose() {}
+	public void dispose() {
+		music.stop(); // Stop music
+	}
 	
 	
 	// Display and move sharks
