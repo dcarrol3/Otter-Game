@@ -4,6 +4,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Button {
@@ -11,6 +12,7 @@ public class Button {
 	final OtterGame game;
 	private Texture button;	// Main button Texture
 	private Texture highlightedTexture; // If texture is highlighted
+	Sound sound;
 	private int height;		// Button height
 	private int width;		// Button width
 	private int xCoord;		// Button x coord
@@ -20,6 +22,7 @@ public class Button {
 		game = gam;
 		button = new Texture(file);
 		highlightedTexture = new Texture(file);
+		sound = Gdx.audio.newSound(Gdx.files.internal("button.wav"));
 		height = h;
 		width = w;
 		xCoord = x;
@@ -27,6 +30,18 @@ public class Button {
 		
 	}
 	
+	// Constructor for adding custom sound
+	public Button(final OtterGame gam, String file, int w, int h, int x, int y, String soundFile ){
+		game = gam;
+		button = new Texture(file);
+		highlightedTexture = new Texture(file);
+		sound = Gdx.audio.newSound(Gdx.files.internal(soundFile));
+		height = h;
+		width = w;
+		xCoord = x;
+		yCoord = y;
+		
+	}
 	// Getters/Setters
 	public int getxCoord() {
 		return xCoord;
@@ -70,8 +85,16 @@ public class Button {
 	boolean isPressed(){
 		boolean pressed = false;
 		if(isHighlighted()){
-			if(Gdx.input.isTouched() || Gdx.input.justTouched())
+			if(Gdx.input.isTouched() || Gdx.input.justTouched()){
 				pressed = true;
+				sound.play(); // Plays sound
+				// Sleeps so sound can be played
+				try {
+				    Thread.sleep(200);                
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+			}
 		}
 		return pressed;
 	}
@@ -101,5 +124,6 @@ public class Button {
 	void dispose(){
 		button.dispose();
 		highlightedTexture.dispose();
+		sound.dispose();
 	}
 }

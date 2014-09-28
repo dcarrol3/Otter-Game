@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -29,11 +30,15 @@ class Player {
 	public final int INVINTIME = 3;			// Time in seconds for otter to be invincible
 	private long timer = 0;					// Timer for hitting sharks
 	ArrayList<Bullet> bulletList;			// Handles bullets
+	Sound bite;								// Shark bite sound
+	Sound shoot;							// Throw clam sound
 	
 	public Player(final OtterGame gam, ArrayList<Bullet> bulletList){
 		this.game = gam;
 		this.bulletList = bulletList;
 		playerSprite = new Texture("player.png");
+		bite = Gdx.audio.newSound(Gdx.files.internal("bite.wav")); // Player hits shark sound
+		shoot = Gdx.audio.newSound(Gdx.files.internal("shoot.mp3")); //
 		ammo = 5;
 		
 		// Set first position
@@ -215,13 +220,14 @@ class Player {
 		long time = System.currentTimeMillis();
 		// Set time and timer
 		if(timer == 0){
-		timer = time + (INVINTIME * 1000);
-		lives--;
-		lifeArray[lives].dispose(); // Dispose of life
+			bite.play();
+			timer = time + (INVINTIME * 1000);
+			lives--;
+			lifeArray[lives].dispose(); // Dispose of life
 		}
 		// If invincible time is up
 		if(timer != 0 && time > timer)
-		timer = 0;
+			timer = 0;
 	}
 	
 	// Player hits a clam
@@ -238,6 +244,7 @@ class Player {
 	
 	void fire(){
 		
+		shoot.play(); // Play fire sound
 		bulletList.add(new Bullet(game, xCoord, yCoord));
 		ammo--;
 		
@@ -267,6 +274,7 @@ class Player {
 	// Garbage collection
 	void dispose() {
 		playerSprite.dispose();
+		bite.dispose();
 	}
 	
 }

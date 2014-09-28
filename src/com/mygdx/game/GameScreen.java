@@ -194,6 +194,12 @@ public class GameScreen implements Screen {
 	void ifDead(){
 		
 		if(player.getLives() <= 0){
+			// Time for sounds
+			try {
+			    Thread.sleep(300);                
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
 			dispose();
 			game.setScreen(new GameOver(game, score));
 		}
