@@ -22,7 +22,6 @@ public class GameScreen implements Screen {
 	ArrayList<Shark> sharkList;		// Shark list
 	final int STARTINGSHARKS = 5;	// Number of sharks to start with
 	final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
-	int numSharks = STARTINGSHARKS; // Keeps track of number of sharks
 	int score;						// Handles player score
 	ArrayList<Bullet> bulletList;	// Handles bullets
 	Music music;					// Background music
@@ -43,10 +42,9 @@ public class GameScreen implements Screen {
 		levelTimeCount = 0.0f;
 		
 		
-		// Build shark array
-		
+		// Build shark list
 		for (int i = 0; i < STARTINGSHARKS; i++) {
-			sharkList.add(new Shark(game));
+			sharkList.add(new Shark(game, (level-1)*levelDifficulty));
 		}
 		
 		// Textures
@@ -147,7 +145,7 @@ public class GameScreen implements Screen {
 	
 	// Display and move sharks
 	private void displaySharks(){
-		for (int i = 0; i < numSharks; i++) {
+		for (int i = 0; i < sharkList.size(); i++) {
 			sharkList.get(i).movement();
 			sharkList.get(i).display();
 		}
@@ -171,14 +169,14 @@ public class GameScreen implements Screen {
 	}
  	// collision check with sharks
 	private void sharkCollision() {
-		for (int i = 0; i < numSharks; i++)  {
+		for (int i = 0; i < sharkList.size(); i++)  {
 			
 			// Player hits shark
 			if(sharkList.get(i).hitBox.overlaps(player.hitBox))
 				player.hitByShark();
 			
 			// If sharks hit sharks
-			for (int j = 0; j < numSharks; j++) {
+			for (int j = 0; j < sharkList.size(); j++) {
 				// Shark hits shark
 				if(sharkList.get(i).hitBox.overlaps(sharkList.get(j).hitBox) && i != j){ 
 					sharkList.get(i).respawnShark();
@@ -220,7 +218,12 @@ public class GameScreen implements Screen {
 		// Checks if hits level time, must be 0.03 instead of 0
 		if(levelTimeCount >= levelTime){
 			level++;
-			Shark.setSpeed(Shark.getSpeed() + levelDifficulty);
+			// Increase sharks speed
+			for (int i = 0; i < sharkList.size(); i++) {
+				sharkList.get(i).setSpeed((sharkList.get(i).getSpeed() + levelDifficulty));
+			}
+			// Add shark
+			sharkList.add(new Shark(game, (level-1)*levelDifficulty));
 			levelTimeCount = 0.0f;
 		}		
 	}

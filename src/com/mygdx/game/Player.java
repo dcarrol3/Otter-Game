@@ -18,7 +18,7 @@ class Player {
 	Texture playerSprite; // Player texture
 	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
 	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
-	public final byte SPEED = 3; 			// Player speed
+	public final byte SPEED = 4; 			// Player speed
 	private int ammo;			  			// Number of clams for shooting
 	public final double  SHOTDELAY = .1;    // Delay between shots in seconds
 	private int xCoord;	  					// Player x coord
