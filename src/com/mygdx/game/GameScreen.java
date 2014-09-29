@@ -26,12 +26,20 @@ public class GameScreen implements Screen {
 	int score;						// Handles player score
 	ArrayList<Bullet> bulletList;	// Handles bullets
 	Music music;					// Background music
+	private float playTimeSec = 0.0f; 	  // Game timer seconds
+	private int playTimeMin = 0;	// Game time minutes
+	private float levelTimeCount;	// Helper for keeping track of time
+	private int level;				// Level number
+	public final float levelTime = 15.0f; // Time between levels
+	public final int levelDifficulty = 2; // Sets shark speed increase per level
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
 		bulletList = new ArrayList<Bullet>();  
 		player = new Player(game, bulletList);
 		score = 0;
+		level = 0;
+		levelTimeCount = 0.0f;
 		
 		
 		// Build shark array
@@ -70,10 +78,9 @@ public class GameScreen implements Screen {
 	    // movements 
 	    player.movement();
 	    
-	    //moveBullets();
-	    
 	    // Logic Checks
 	    player.fireCheck();	// Checks if user hits fire button
+	    levels(delta);
 	    
 	    // collision check with sharks and player
 	    sharkCollision();
@@ -83,13 +90,13 @@ public class GameScreen implements Screen {
 	    game.batch.begin();
 	    game.batch.draw(background, 0, 0); // Background
 	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 100, 380);
+	    game.font.draw(game.batch, playTime(delta), 100, 450);
+	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
 	    displayBullets();	// Displays bullets
 	    displaySharks(); 	// Display shark sprite
 	    player.display(); 	  // Display player sprite - Must be before sharks
 	    player.displayLife(); // Display lives
-	    game.batch.end();
-	    
-	    
+	    game.batch.end(); 
 	  
 	}
 
@@ -203,5 +210,30 @@ public class GameScreen implements Screen {
 			dispose();
 			game.setScreen(new GameOver(game, score));
 		}
+	}
+	
+	// Handles levels
+	void levels(float delta){
+		
+		levelTimeCount += delta;
+		// Checks if hits level time, must be 0.03 instead of 0
+		if(levelTimeCount >= levelTime){
+			level++;
+			Shark.setSpeed(Shark.getSpeed() + levelDifficulty);
+			levelTimeCount = 0.0f;
+		}		
+	}
+	
+	// Handles playtime and converting it to string
+	String playTime(float delta){
+		 
+		 playTimeSec += delta;
+		 // Handles converting to minutes
+		 if(playTimeSec >= 60){
+			 playTimeMin++;
+			 playTimeSec = 0.0f;
+		 }	
+		 
+		 return "Time: " + playTimeMin + (Math.round(playTimeSec) < 10? ":0" : ":") + Math.round(playTimeSec);
 	}
 }

@@ -26,7 +26,7 @@ public class GameOver implements Screen {
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480); // Screen size to 800x600
         
-        buttons();	// Creats buttons
+        buttons();	// Creates buttons
         scoreToString(score);
         
         // Textures

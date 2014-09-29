@@ -18,14 +18,14 @@ public class Bullet{
 	
 	Bullet(final OtterGame gam, int x, int y){
 		game = gam;
-		bullet = new Texture("redclam.png");
+		bullet = new Texture("bullet.png");
 		
 		xCoord = x;
 		yCoord = y;
 		
 		// Build hit box
 		hitBox = new Rectangle();
-		hitBox.setSize(50, 20); // TODO Set size of rectangle
+		hitBox.setSize(28, 28); // TODO Set size of rectangle
 		hitBox.setPosition(xCoord, yCoord); // Match loaction with shark
 	}
 	
