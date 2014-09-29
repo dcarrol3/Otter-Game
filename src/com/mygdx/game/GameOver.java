@@ -19,15 +19,19 @@ public class GameOver implements Screen {
 	Button replay;				// Play again button
 	Texture background;			// background
 	String scoreDisplay;		// Score to string
+	String timeDisplay;			// Displays round time
+	String levelDisplay;
 	
-	public GameOver(final OtterGame gam, int score){
+	public GameOver(final OtterGame gam, int score, String time, int level){
 		
 		game = gam;
+		timeDisplay = time;
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480); // Screen size to 800x600
         
         buttons();	// Creates buttons
         scoreToString(score);
+        levelToString(level);
         
         // Textures
      	background = new Texture("gamebackground.png");
@@ -95,8 +99,10 @@ public class GameOver implements Screen {
 	
 	// Displays sprites
 	void display(){
-		 game.font.draw(game.batch, "DEATH ", 360, 240);
+		 game.font.draw(game.batch, "Game Over", 360, 240);
 		 game.font.draw(game.batch, scoreDisplay, 360, 270);
+		 game.font.draw(game.batch, timeDisplay, 360, 330);
+		 game.font.draw(game.batch, levelDisplay, 360, 300);
 		 quit.display();
 		 replay.display();
 		 menu.display();
@@ -140,5 +146,10 @@ public class GameOver implements Screen {
 	// How to display score via text
 	private void scoreToString(int score){
 		scoreDisplay = "Your score was: " + score;
+	}
+	
+	// How to display levels
+	private void levelToString(int level){
+		levelDisplay = "Level reached: " + level;
 	}
 }

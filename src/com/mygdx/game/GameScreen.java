@@ -19,7 +19,7 @@ public class GameScreen implements Screen {
 	OrthographicCamera camera;		// Main game camera
 	Texture background;				// Background texture
 	Player player;					// Player or otter
-	Shark[] sharkArray;				// Shark array
+	ArrayList<Shark> sharkList;		// Shark list
 	final int STARTINGSHARKS = 5;	// Number of sharks to start with
 	final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
 	int numSharks = STARTINGSHARKS; // Keeps track of number of sharks
@@ -35,17 +35,18 @@ public class GameScreen implements Screen {
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
-		bulletList = new ArrayList<Bullet>();  
+		bulletList = new ArrayList<Bullet>();
+		sharkList = new ArrayList<Shark>();
 		player = new Player(game, bulletList);
 		score = 0;
-		level = 0;
+		level = 1;   // Starting level
 		levelTimeCount = 0.0f;
 		
 		
 		// Build shark array
-		sharkArray = new Shark[MAXSHARKS];
+		
 		for (int i = 0; i < STARTINGSHARKS; i++) {
-			sharkArray[i] = new Shark(game);
+			sharkList.add(new Shark(game));
 		}
 		
 		// Textures
@@ -84,7 +85,6 @@ public class GameScreen implements Screen {
 	    
 	    // collision check with sharks and player
 	    sharkCollision();
-	    ifDead();
 	    
 	    //Start new sprite batch - Backround MUST be first!
 	    game.batch.begin();
@@ -97,6 +97,9 @@ public class GameScreen implements Screen {
 	    player.display(); 	  // Display player sprite - Must be before sharks
 	    player.displayLife(); // Display lives
 	    game.batch.end(); 
+	    
+	    // Checks if player is dead - MUST be at bottom of render
+	    ifDead();
 	  
 	}
 
@@ -138,17 +141,15 @@ public class GameScreen implements Screen {
 		player.dispose();
 		
 		// Dispose of sharks
-		for (int i = 0; i < numSharks; i++)  {
-			sharkArray[i].dispose();
-		}
+		sharkList.clear();
 	}
 	
 	
 	// Display and move sharks
 	private void displaySharks(){
 		for (int i = 0; i < numSharks; i++) {
-			sharkArray[i].movement();
-			sharkArray[i].display();
+			sharkList.get(i).movement();
+			sharkList.get(i).display();
 		}
 	}
 	
@@ -173,21 +174,21 @@ public class GameScreen implements Screen {
 		for (int i = 0; i < numSharks; i++)  {
 			
 			// Player hits shark
-			if(sharkArray[i].hitBox.overlaps(player.hitBox))
+			if(sharkList.get(i).hitBox.overlaps(player.hitBox))
 				player.hitByShark();
 			
 			// If sharks hit sharks
 			for (int j = 0; j < numSharks; j++) {
 				// Shark hits shark
-				if(sharkArray[i].hitBox.overlaps(sharkArray[j].hitBox) && i != j){ 
-					sharkArray[i].respawnShark();
-					sharkArray[j].respawnShark();
+				if(sharkList.get(i).hitBox.overlaps(sharkList.get(j).hitBox) && i != j){ 
+					sharkList.get(i).respawnShark();
+					sharkList.get(j).respawnShark();
 				}
 			}
 			// If bullets hit sharks kill shark and remove bullet
 			for (int k = 0; k < bulletList.size(); k++){
-				if(sharkArray[i].hitBox.overlaps(bulletList.get(k).hitBox)){
-					sharkArray[i].respawnShark();
+				if(sharkList.get(i).hitBox.overlaps(bulletList.get(k).hitBox)){
+					sharkList.get(i).respawnShark();
 					bulletList.remove(bulletList.get(k));
 				}
 			}
@@ -208,7 +209,7 @@ public class GameScreen implements Screen {
 			    Thread.currentThread().interrupt();
 			}
 			dispose();
-			game.setScreen(new GameOver(game, score));
+			game.setScreen(new GameOver(game, score, playTime(0), level));
 		}
 	}
 	

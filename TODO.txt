@@ -1,7 +1,7 @@
 TODO list:
 
-Add options page
+Add options page with save file
 Add music/sounds
 Add shark speed/spawns or levels?
 Add clams
-Save score from file
+Save score to file
