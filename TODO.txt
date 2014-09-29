@@ -5,3 +5,4 @@ Add music/sounds
 Add shark speed/spawns or levels?
 Add clams
 Save score to file
+Pause button

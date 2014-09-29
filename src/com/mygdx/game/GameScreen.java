@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -31,13 +32,21 @@ public class GameScreen implements Screen {
 	private int level;				// Level number
 	public final float levelTime = 15.0f; // Time between levels
 	public final int levelDifficulty = 2; // Sets shark speed increase per level
+	private int state;				// Controls game state 0 for paused, 1 for running
+	private float delta;			// In game time keeper
+	// Pause objects
+	Button quit;					// Quits game
+	Button menu;					// Goes to menu
+	Button restart;					// Restarts game
+	Button resume;					// Resumes game
 	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
 		bulletList = new ArrayList<Bullet>();
 		sharkList = new ArrayList<Shark>();
 		player = new Player(game, bulletList);
-		score = 0;
+		score = 0;	 // Starting score	
+		state = 1;   // 1 for running, 0 for paused
 		level = 1;   // Starting level
 		levelTimeCount = 0.0f;
 		
@@ -59,6 +68,14 @@ public class GameScreen implements Screen {
 		camera.setToOrtho(false, 800, 480); // Screen size
 	}
 
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
 	@Override
 	public void render(float delta) {
 		
@@ -70,32 +87,23 @@ public class GameScreen implements Screen {
 	    // Updates the screen
 	    camera.update();
 	    
+	    this.delta = delta;
 	    
 	    // Tells sprites to render on screen
 	    game.batch.setProjectionMatrix(camera.combined);
 	    
-	    // movements 
-	    player.movement();
+	    // Checks for game state
+	    gameState();
 	    
-	    // Logic Checks
-	    player.fireCheck();	// Checks if user hits fire button
-	    levels(delta);
+	    // Updates game screen
+	    update();
 	    
-	    // collision check with sharks and player
-	    sharkCollision();
-	    
-	    //Start new sprite batch - Backround MUST be first!
+	    //Start new sprite batch
 	    game.batch.begin();
-	    game.batch.draw(background, 0, 0); // Background
-	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 100, 380);
-	    game.font.draw(game.batch, playTime(delta), 100, 450);
-	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
-	    displayBullets();	// Displays bullets
-	    displaySharks(); 	// Display shark sprite
-	    player.display(); 	  // Display player sprite - Must be before sharks
-	    player.displayLife(); // Display lives
-	    game.batch.end(); 
-	    
+	    display();
+	    pauseDisplay();  // Pause display - MUST be after normal display
+	    game.batch.end();
+	   
 	    // Checks if player is dead - MUST be at bottom of render
 	    ifDead();
 	  
@@ -118,18 +126,15 @@ public class GameScreen implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// Handles pause menu
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-		
+		buttonLogic();
 	}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 	
 	// Disposes of objects on screen
 	@Override
@@ -143,12 +148,15 @@ public class GameScreen implements Screen {
 	}
 	
 	
+	private void moveSharks(){
+		for(int i = 0; i < sharkList.size(); i++)
+			sharkList.get(i).movement();
+	}
+	
 	// Display and move sharks
 	private void displaySharks(){
-		for (int i = 0; i < sharkList.size(); i++) {
-			sharkList.get(i).movement();
+		for (int i = 0; i < sharkList.size(); i++) 
 			sharkList.get(i).display();
-		}
 	}
 	
 	// Display bulets
@@ -207,14 +215,15 @@ public class GameScreen implements Screen {
 			    Thread.currentThread().interrupt();
 			}
 			dispose();
-			game.setScreen(new GameOver(game, score, playTime(0), level));
+			game.setScreen(new GameOver(game, score, playTime(), level));
 		}
 	}
 	
 	// Handles levels
-	void levels(float delta){
-		
+	void levels(){
+	
 		levelTimeCount += delta;
+
 		// Checks if hits level time, must be 0.03 instead of 0
 		if(levelTimeCount >= levelTime){
 			level++;
@@ -228,16 +237,146 @@ public class GameScreen implements Screen {
 		}		
 	}
 	
+	// Increases game time
+	void increaseTime(){
+		playTimeSec += delta;
+	}
+	
 	// Handles playtime and converting it to string
-	String playTime(float delta){
+	String playTime(){
+		
+		// Handles converting to minutes
+		if(playTimeSec >= 60){
+			playTimeMin++;
+			playTimeSec = 0.0f;
+		}	
 		 
-		 playTimeSec += delta;
-		 // Handles converting to minutes
-		 if(playTimeSec >= 60){
-			 playTimeMin++;
-			 playTimeSec = 0.0f;
-		 }	
-		 
-		 return "Time: " + playTimeMin + (Math.round(playTimeSec) < 10? ":0" : ":") + Math.round(playTimeSec);
+		return "Time: " + playTimeMin + (Math.round(playTimeSec) < 10? ":0" : ":") + Math.round(playTimeSec);
+	}
+	
+	// Sets game state
+	void gameState(){
+		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)){
+			// Pause
+			if(state == 1){
+				state = 0;
+				music.pause(); // Pause music
+				buildPause();
+			}
+			// Resume
+			else if(state == 0){
+				state = 1;
+				music.play();
+				killPause();
+			}
+		}
+	}
+	
+	// Updates game elements
+	void update(){
+		// If game is running
+		if(state == 1){
+			// Increases game time
+			increaseTime();
+			
+			// movements 
+		    player.movement();
+		    moveSharks();
+		    
+		    // collision check with sharks and player
+		    sharkCollision();
+		    
+		    // Logic Checks
+		    player.fireCheck();	// Checks if user hits fire button
+		    levels();
+		}
+		// If paused
+		else
+			pause();
+		
+	}
+	
+	// Handles display for GameScreen
+	void display(){
+		game.batch.draw(background, 0, 0); // Background
+	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 100, 380);
+	    game.font.draw(game.batch, playTime(), 100, 450);
+	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
+	    displayBullets();	// Displays bullets
+	    displaySharks(); 	// Display shark sprite
+	    player.display(); 	  // Display player sprite - Must be before sharks
+	    player.displayLife(); // Display lives
+	}
+	
+	// Pause display
+	void pauseDisplay(){
+		// If game is paused
+		if(state == 0){
+			quit.display();
+			restart.display();
+			menu.display();
+			resume.display();
+		}
+	}
+	
+	// Builds pause menu
+	void buildPause(){
+		// Create quit button
+		quit = new Button(game, "quit_np.png", 84, 43, 400-(84/2), 150);
+        quit.setPressedTexture("quit_p.png");
+        
+        // Create main menu button
+        menu = new Button(game, "menu_np.png", 136, 43, 400-(136/2), 200);
+        menu.setPressedTexture("menu_p.png");
+        
+        // Create play again button
+        restart = new Button(game, "replay_np.png", 132, 43, 400-(132/2), 250);
+        restart.setPressedTexture("replay_p.png");
+        
+        // Create resume button
+        resume = new Button(game, "resume_np.png", 113, 43, 400-(113/2), 300);
+        resume.setPressedTexture("resume_p.png");
+	}
+	
+	// Disposes pause menu
+	void killPause(){
+		quit.dispose();
+		menu.dispose();
+		restart.dispose();
+		quit = null;
+		menu = null;
+		restart = null;
+	}
+	
+	// Handles button logic for pause menu
+	private void buttonLogic(){
+		// Button logic - MUST be else-ifs
+        
+		// Resumes game
+		if(resume.isPressed()){
+			state = 1;
+			music.play();
+			killPause();
+		}
+		// Re-runs game
+		else if (restart.isPressed()) {
+        	dispose();
+        	game.setScreen(new GameScreen(game));
+        }
+        
+        // Main menu
+		else if(menu.isPressed()){
+        	dispose();
+        	game.setScreen(new MainMenu(game));
+        }
+        
+        // Exits game
+		else if(quit.isPressed())
+        	System.exit(0);
 	}
 }
+
+
+
+
+

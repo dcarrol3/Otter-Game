@@ -78,7 +78,7 @@ public class GameOver implements Screen {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -128,14 +128,14 @@ public class GameOver implements Screen {
 		// Button logic
         // Re-runs game
         if (replay.isPressed()) {
+        	dispose();
             game.setScreen(new GameScreen(game));
-            dispose();
         }
         
         // Main menu
         if(menu.isPressed()){
-        	game.setScreen(new MainMenu(game));
         	dispose();
+        	game.setScreen(new MainMenu(game));
         }
         
         // Exits game
