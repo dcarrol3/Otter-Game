@@ -45,6 +45,7 @@ public class GameScreen implements Screen {
 		bulletList = new ArrayList<Bullet>();
 		sharkList = new ArrayList<Shark>();
 		player = new Player(game, bulletList);
+		buildPause();
 		score = 0;	 // Starting score	
 		state = 1;   // 1 for running, 0 for paused
 		level = 1;   // Starting level
@@ -145,6 +146,11 @@ public class GameScreen implements Screen {
 		
 		// Dispose of sharks
 		sharkList.clear();
+		
+		// Pause dispose
+		quit.dispose();
+		menu.dispose();
+		restart.dispose();
 	}
 	
 	
@@ -261,13 +267,11 @@ public class GameScreen implements Screen {
 			if(state == 1){
 				state = 0;
 				music.pause(); // Pause music
-				buildPause();
 			}
 			// Resume
 			else if(state == 0){
 				state = 1;
 				music.play();
-				killPause();
 			}
 		}
 	}
@@ -338,16 +342,6 @@ public class GameScreen implements Screen {
         resume.setPressedTexture("resume_p.png");
 	}
 	
-	// Disposes pause menu
-	void killPause(){
-		quit.dispose();
-		menu.dispose();
-		restart.dispose();
-		quit = null;
-		menu = null;
-		restart = null;
-	}
-	
 	// Handles button logic for pause menu
 	private void buttonLogic(){
 		// Button logic - MUST be else-ifs
@@ -356,7 +350,6 @@ public class GameScreen implements Screen {
 		if(resume.isPressed()){
 			state = 1;
 			music.play();
-			killPause();
 		}
 		// Re-runs game
 		else if (restart.isPressed()) {

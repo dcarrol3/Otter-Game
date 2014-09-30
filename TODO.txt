@@ -4,5 +4,6 @@ Add options page with save file
 Add music/sounds
 Add shark speed/spawns or levels?
 Add clams
+Add score
 Save score to file
 Pause button

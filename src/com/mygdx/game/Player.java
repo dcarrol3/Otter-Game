@@ -47,7 +47,7 @@ class Player {
 		
 		// construct hitbox
 		hitBox = new Rectangle(); 
-		hitBox.setSize(120, 36); // Set size of rectangle
+		hitBox.setSize(120, 30); // Set size of rectangle
 		hitBox.setPosition(xCoord, yCoord); // Match loaction with shark
 		
 		// Build lives
