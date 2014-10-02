@@ -75,6 +75,9 @@ public class Button {
 		this.height = height;
 	}
 	
+	public void setTexture(String file){
+		button = new Texture(file);
+	}
 	
 	// Set different highlighted button texture
 	public void setPressedTexture(String file){

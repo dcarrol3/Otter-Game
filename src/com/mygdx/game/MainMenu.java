@@ -15,12 +15,13 @@ public class MainMenu implements Screen {
 	OrthographicCamera camera;	// Main menu camera
 	Button startButton;			// Main start button
 	Button quitButton;			// Menu quit button
+	Button optionsButton;		// Menu options button
 	
 	public MainMenu(final OtterGame gam){
 		
 		game = gam;
 		camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480); // Screen size to 800x600
+        camera.setToOrtho(false, 800, 480); // Screen size to 800x480
        
         
         // Creates buttons
@@ -51,6 +52,10 @@ public class MainMenu implements Screen {
         if (startButton.isPressed()){ 
         	dispose();
     		game.setScreen(new GameScreen(game));
+        }
+        if (optionsButton.isPressed()){
+        	dispose();
+        	game.setScreen(new Options(game));
         }
         // Checks if quit is hit and exits game
         if(quitButton.isPressed())
@@ -105,6 +110,7 @@ public class MainMenu implements Screen {
 		 game.font.draw(game.batch, "Otter Game ", 108, 180);
 		 startButton.display();
 		 quitButton.display();
+		 optionsButton.display();
 	}
 	
 	// Creates buttons
@@ -112,8 +118,13 @@ public class MainMenu implements Screen {
 		// Create start button
         startButton = new Button(game, "start_np.png", 84, 43, 100, 100);
         startButton.setPressedTexture("start_p.png");
+        
         // Create quit button
         quitButton = new Button(game, "quit_np.png", 84, 43, 600, 100);
         quitButton.setPressedTexture("quit_p.png");
+        
+        // Create options button
+        optionsButton = new Button(game, "options_np.png", 110, 43, 343, 100);
+        optionsButton.setPressedTexture("options_p.png");
 	}
 }
