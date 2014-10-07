@@ -26,7 +26,6 @@ public class Options implements Screen{
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480); // Screen size to 800x480
 		
-		defaults();
 		buildButtons();
 	}
 	
