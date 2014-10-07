@@ -18,14 +18,13 @@ public class Options implements Screen{
 	MuteButton mute;		// Mute in game music
 	Button musicUp;			// Music volume up
 	Button musicDown;		// Music volume down
-	private static Preferences saveFile; // Options file
+	private static Preferences saveFile = Gdx.app.getPreferences("OtterGame"); // Options file
 	
 	Options(OtterGame gam){
 		game = gam;
 		
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480); // Screen size to 800x480
-		saveFile = Gdx.app.getPreferences("OtterGame");
 		
 		defaults();
 		buildButtons();
@@ -154,7 +153,7 @@ public class Options implements Screen{
 	}
 	
 	// Load default values if needed
-	private void defaults(){
+	public static void defaults(){
 		
 		// Creates volume in file
 		if (!saveFile.contains("Volume")) {

@@ -27,7 +27,8 @@ public class MainMenu implements Screen {
         // Creates buttons
         createButtons();
         
-        // Music
+        // Sets default options if needed
+        Options.defaults();
         
 	}
 	

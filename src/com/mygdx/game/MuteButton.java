@@ -1,3 +1,6 @@
+// Mute button
+// Doug Carroll and Jon Jordon
+
 package com.mygdx.game;
 
 public class MuteButton extends Button{
