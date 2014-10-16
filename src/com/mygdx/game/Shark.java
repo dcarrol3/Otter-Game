@@ -59,7 +59,6 @@ class Shark  {
 		positionReset();
 		xCoord += speed;
 		hitBox.setPosition(xCoord + xOffset, yCoord);
-		
 	}
 	
 	// TODO Handles animations
@@ -73,9 +72,8 @@ class Shark  {
 	}
 	void positionReset() {
 		// setting random variable
-		if(xCoord >= game.getWidth()+200) {
+		if(xCoord >= game.getWidth()+200) 
 			respawnShark();
-		}
 	}
 
 	public void display() {
