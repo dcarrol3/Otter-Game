@@ -13,8 +13,9 @@ class Shark  {
 	Texture sharkSprite;		// Shark texture
 	private int xCoord; 		// X Coord on map
 	private int yCoord;			// Y Coord on map
-	private int speed;	// Speed of sharks
-	public final int xOffset = 60; // Hitbox offset from bottom-left corner
+	public final int STARTSPEED = 4; // Starting speed for sharks
+	private int speed = STARTSPEED;	 // Speed of sharks
+	public final int xOffset = 60;   // Hitbox offset from bottom-left corner
 	Random rand;
 	final OtterGame game;
 	Rectangle hitBox;			// Hit box for sharks
@@ -23,8 +24,8 @@ class Shark  {
 	
 		this.game = gam;
 		
-		sharkSprite = new Texture("shark.png"); // shark pics
-		speed = 4 + speedOffset; 				// speed of sharks
+		sharkSprite = new Texture("shark.png"); // Shark sprite
+		speed = speed + speedOffset; 			// speed of sharks
 		rand = new Random();
 		int temp = rand.nextInt(1000)+100*2; 	// random
 		xCoord = temp-temp*2; 					// randomly spawns the sharks

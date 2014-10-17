@@ -21,8 +21,10 @@ public class GameScreen implements Screen {
 	Texture background;				// Background texture
 	Player player;					// Player or otter
 	ArrayList<Shark> sharkList;		// Shark list
-	final int STARTINGSHARKS = 5;	// Number of sharks to start with
-	final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
+	ArrayList<Clam> clamList;		// Clam list
+	public final int STARTINGSHARKS = 5;	// Number of sharks to start with
+	public final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
+	public final int STARTINGCLAMS = 3;		// Starting number of clams
 	int score;						// Handles player score
 	ArrayList<Bullet> bulletList;	// Handles bullets
 	Music music;					// Background music
@@ -40,10 +42,12 @@ public class GameScreen implements Screen {
 	Button restart;					// Restarts game
 	Button resume;					// Resumes game
 	
+	
 	public GameScreen(final OtterGame gam){
 		this.game = gam;
 		bulletList = new ArrayList<Bullet>();
 		sharkList = new ArrayList<Shark>();
+		clamList = new ArrayList<Clam>();
 		player = new Player(game, bulletList);
 		buildPause();
 		score = 0;	 // Starting score	
@@ -53,9 +57,13 @@ public class GameScreen implements Screen {
 		
 		
 		// Build shark list
-		for (int i = 0; i < STARTINGSHARKS; i++) {
+		for (int i = 0; i < STARTINGSHARKS; i++) 
 			sharkList.add(new Shark(game, (level-1)*levelDifficulty));
-		}
+		
+		
+		// Build clam list
+		for (int i = 0; i < STARTINGCLAMS; i++)
+			clamList.add(new Clam(game, 0));
 		
 		// Textures
 		background = new Texture("gamebackground.png");
@@ -154,19 +162,70 @@ public class GameScreen implements Screen {
 		restart.dispose();
 	}
 	
+	// Updates game elements
+	void update(){
+		// If game is running
+		if(state == 1){
+			// Increases game time
+			increaseTime();
+			
+			// Movements 
+		    player.movement();
+		    moveSharks();
+		    moveClams();
+		    
+		    // Collision checks
+		    sharkCollision();
+		    clamCollision();
+		    
+		    // Logic Checks
+		    player.fireCheck();	// Checks if user hits fire button
+		    levels();
+		}
+		// If paused
+		else
+			pause();
+		
+	}
 	
+	// Handles display for GameScreen
+	void display(){
+		game.batch.draw(background, 0, 0); // Background
+	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 100, 380);
+	    game.font.draw(game.batch, playTime(), 100, 450);
+	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
+	    displayBullets();	// Displays bullets
+	    displaySharks(); 	// Displays shark sprites
+	    displayClams();		// Displays clam sprites
+	    player.display(); 	  // Display player sprite - Must be before sharks
+	    player.displayLife(); // Display lives
+	}
+
+	// Handles shark movement for the list
 	private void moveSharks(){
 		for(int i = 0; i < sharkList.size(); i++)
 			sharkList.get(i).movement();
 	}
 	
-	// Display and move sharks
+	// Handles clam movement for the list
+	private void moveClams(){
+		for(int i = 0; i < clamList.size(); i++)
+			clamList.get(i).movement();
+	}
+	
+	// Displays clams
+	private void displayClams(){
+		for(int i = 0; i < clamList.size(); i++)
+			clamList.get(i).display();
+	}
+	
+	// Displays sharks
 	private void displaySharks(){
 		for (int i = 0; i < sharkList.size(); i++) 
 			sharkList.get(i).display();
 	}
 	
-	// Display bulets
+	// Display bullets and handle bullet movement
 	private void displayBullets(){
 		for (int i = 0; i < bulletList.size(); i++){
 			// Handles bullet movement
@@ -182,7 +241,29 @@ public class GameScreen implements Screen {
 			}		
 		}
 	}
- 	// collision check with sharks
+	
+	// Clam collision
+	private void clamCollision(){
+		
+		for(int i = 0; i < clamList.size(); i++){
+			// Player his clam
+			if(clamList.get(i).hitBox.overlaps(player.hitBox)){
+				clamList.get(i).respawnClam(); // Kill clam
+				player.hitByClam();
+				score++; // Increase score
+			}
+			
+			for(int j = 0; j < clamList.size(); j++){
+				// Clam hits clam
+				if(clamList.get(i).hitBox.overlaps(clamList.get(j).hitBox) && i != j){ 
+					clamList.get(i).respawnClam();
+					clamList.get(j).respawnClam();
+				}
+			}	
+		}
+	}
+	
+ 	// Collision check with sharks
 	private void sharkCollision() {
 		for (int i = 0; i < sharkList.size(); i++)  {
 			
@@ -205,10 +286,14 @@ public class GameScreen implements Screen {
 					bulletList.remove(bulletList.get(k));
 				}
 			}
-			
-		}
-			
-		
+			// If shark spawns on clam at same speed
+			for (int l = 0; l < clamList.size(); l++){
+				if(sharkList.get(i).getSpeed() == sharkList.get(i).STARTSPEED 
+				&& clamList.get(l).hitBox.overlaps(sharkList.get(i).hitBox))
+					// Respawn that clam
+					clamList.get(l).respawnClam();
+			}
+		}		
 	}
 	
 	// When lives are gone
@@ -275,42 +360,6 @@ public class GameScreen implements Screen {
 				music.play();
 			}
 		}
-	}
-	
-	// Updates game elements
-	void update(){
-		// If game is running
-		if(state == 1){
-			// Increases game time
-			increaseTime();
-			
-			// movements 
-		    player.movement();
-		    moveSharks();
-		    
-		    // collision check with sharks and player
-		    sharkCollision();
-		    
-		    // Logic Checks
-		    player.fireCheck();	// Checks if user hits fire button
-		    levels();
-		}
-		// If paused
-		else
-			pause();
-		
-	}
-	
-	// Handles display for GameScreen
-	void display(){
-		game.batch.draw(background, 0, 0); // Background
-	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 100, 380);
-	    game.font.draw(game.batch, playTime(), 100, 450);
-	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
-	    displayBullets();	// Displays bullets
-	    displaySharks(); 	// Display shark sprite
-	    player.display(); 	  // Display player sprite - Must be before sharks
-	    player.displayLife(); // Display lives
 	}
 	
 	// Pause display

@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class Options implements Screen{
 	
-	OtterGame game;
+	final OtterGame game;
 	OrthographicCamera camera;	// Options camera
 	Button back;			// Back to previous screen
 	MuteButton mute;		// Mute in game music
@@ -20,7 +20,7 @@ public class Options implements Screen{
 	Button musicDown;		// Music volume down
 	private static Preferences saveFile = Gdx.app.getPreferences("OtterGame"); // Options file
 	
-	Options(OtterGame gam){
+	Options(final OtterGame gam){
 		game = gam;
 		
 		camera = new OrthographicCamera();

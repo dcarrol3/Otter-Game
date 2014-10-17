@@ -23,10 +23,16 @@ class Clam {
 		
 		game = gam;
 		rand = new Random();
+		clamSprite = new Texture("yellowclam.png"); // Clam sprite
 		int temp = rand.nextInt(1000)+100*2; 	// Random number
 		xCoord = temp-temp*2; 					// Randomly spawns the clams
 		yCoord = rand.nextInt(game.getHeight()-40);
 		speed = 4 + speedOffset; 				// Speed of sharks
+		
+		// Construct hitbox
+		hitBox = new Rectangle(); 
+		hitBox.setSize(38, 28); 			// Set size of rectangle
+		hitBox.setPosition(xCoord, yCoord); // Match loaction with clam
 	}
 	
 	
@@ -50,7 +56,7 @@ class Clam {
 	}
 
 
-	void respawn(){
+	void respawnClam(){
 		yCoord = rand.nextInt(game.getHeight()-40);
 		int temp = rand.nextInt(1000)+100*2;
 		xCoord = temp-temp*2;
@@ -67,7 +73,7 @@ class Clam {
 	void positionReset() {
 		
 		if(xCoord >= game.getWidth()+200) 
-			respawn();
+			respawnClam();
 		
 	}
 	

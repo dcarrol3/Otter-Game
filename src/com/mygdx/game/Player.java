@@ -232,7 +232,9 @@ class Player {
 	
 	// Player hits a clam
 	void hitByClam(){
-		ammo++;
+		
+		ammo++; // Increase player ammo
+		
 	}
 	
 	// Checks shot delay
