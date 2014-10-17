@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 class Player {
 	
 	final OtterGame game;
-	Texture playerSprite; // Player texture
+	Texture playerSprite; 					// Player texture
 	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
 	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
 	public final byte SPEED = 4; 			// Player speed
@@ -32,13 +32,15 @@ class Player {
 	ArrayList<Bullet> bulletList;			// Handles bullets
 	Sound bite;								// Shark bite sound
 	Sound shoot;							// Throw clam sound
+	Sound grabClam;							// Pick up clam sound
 	
 	public Player(final OtterGame gam, ArrayList<Bullet> bulletList){
 		this.game = gam;
 		this.bulletList = bulletList;
 		playerSprite = new Texture("player.png");
 		bite = Gdx.audio.newSound(Gdx.files.internal("bite.wav")); // Player hits shark sound
-		shoot = Gdx.audio.newSound(Gdx.files.internal("shoot.mp3")); //
+		shoot = Gdx.audio.newSound(Gdx.files.internal("shoot.mp3")); // Shoot sound
+		grabClam = Gdx.audio.newSound(Gdx.files.internal("grabClam.wav")); // Grab clam sound
 		ammo = 5;
 		
 		// Set first position
@@ -233,6 +235,7 @@ class Player {
 	// Player hits a clam
 	void hitByClam(){
 		
+		grabClam.play(); // Play grab clam sound
 		ammo++; // Increase player ammo
 		
 	}
