@@ -12,7 +12,7 @@ public class Button {
 	final OtterGame game;
 	private Texture button;	// Main button Texture
 	private Texture highlightedTexture; // If texture is highlighted
-	Sound sound;
+	Sound sound;			// Button sound
 	private int height;		// Button height
 	private int width;		// Button width
 	private int xCoord;		// Button x coord
