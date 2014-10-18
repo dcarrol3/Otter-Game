@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "OtterGame";
 		cfg.width = 800;
-	    cfg.height = 600;
+	    cfg.height = 480;
 		new LwjglApplication(new OtterGame(), cfg);
 	}
 }
