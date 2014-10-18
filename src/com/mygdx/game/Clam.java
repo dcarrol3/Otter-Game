@@ -14,9 +14,9 @@ class Clam {
 	Texture clamSprite;		// Clam texture
 	final OtterGame game;	
 	Rectangle hitBox;		// Clam hitbox
-	private int xCoord;		// X coord
-	private int yCoord;		// Y coord
-	private int speed;		// Speed of clams
+	protected int xCoord;	// X coord
+	protected int yCoord;	// Y coord
+	protected int speed;	// Speed of clams
 	Random rand;
 	
 	public Clam(final OtterGame gam, int speedOffset){

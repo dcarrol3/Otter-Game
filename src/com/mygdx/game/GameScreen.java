@@ -5,6 +5,7 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,6 +23,7 @@ public class GameScreen implements Screen {
 	Player player;					// Player or otter
 	ArrayList<Shark> sharkList;		// Shark list
 	ArrayList<Clam> clamList;		// Clam list
+	ArrayList<Object> specialList;	// Specials list
 	public final int STARTINGSHARKS = 5;	// Number of sharks to start with
 	public final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
 	public final int STARTINGCLAMS = 3;		// Starting number of clams
@@ -36,6 +38,7 @@ public class GameScreen implements Screen {
 	public final int levelDifficulty = 2; // Sets shark speed increase per level
 	private int state;				// Controls game state 0 for paused, 1 for running
 	private float delta;			// In game time keeper
+	Random rand;					// Random
 	// Pause objects
 	Button quit;					// Quits game
 	Button menu;					// Goes to menu
@@ -48,7 +51,9 @@ public class GameScreen implements Screen {
 		bulletList = new ArrayList<Bullet>();
 		sharkList = new ArrayList<Shark>();
 		clamList = new ArrayList<Clam>();
+		specialList = new ArrayList<Object>();
 		player = new Player(game, bulletList);
+		rand = new Random();
 		buildPause();
 		score = 0;	 // Starting score	
 		state = 1;   // 1 for running, 0 for paused
@@ -173,10 +178,15 @@ public class GameScreen implements Screen {
 		    player.movement();
 		    moveSharks();
 		    moveClams();
+		    moveSpecials();
 		    
 		    // Collision checks
 		    sharkCollision();
 		    clamCollision();
+		    specialCollision();
+		    
+		    // Special spawns
+		    specialChance();
 		    
 		    // Logic Checks
 		    player.fireCheck();	// Checks if user hits fire button
@@ -197,6 +207,7 @@ public class GameScreen implements Screen {
 	    displayBullets();	// Displays bullets
 	    displaySharks(); 	// Displays shark sprites
 	    displayClams();		// Displays clam sprites
+	    displaySpecials();	// Displays special clams
 	    player.display(); 	  // Display player sprite - Must be before sharks
 	    player.displayLife(); // Display lives
 	}
@@ -213,10 +224,40 @@ public class GameScreen implements Screen {
 			clamList.get(i).movement();
 	}
 	
+	// Handles specials movement
+	private void moveSpecials(){
+		for(int i = 0; i < specialList.size(); i++){
+			// Slow mo clams
+			if(specialList.get(i) instanceof SlowMoClam)
+				((SlowMoClam) specialList.get(i)).movement();
+			// Double clams
+			else if(specialList.get(i) instanceof DoubleClam)
+				((DoubleClam) specialList.get(i)).movement();
+			// Health clams
+			else if(specialList.get(i) instanceof HealthClam)
+				((HealthClam) specialList.get(i)).movement();
+		}
+	}
+	
 	// Displays clams
 	private void displayClams(){
 		for(int i = 0; i < clamList.size(); i++)
 			clamList.get(i).display();
+	}
+	
+	// Handles displaying specials
+	private void displaySpecials(){
+		for(int i = 0; i < specialList.size(); i++){
+			// Slow mo clams
+			if(specialList.get(i) instanceof SlowMoClam)
+				((SlowMoClam) specialList.get(i)).display();
+			// Double clams
+			else if(specialList.get(i) instanceof DoubleClam)
+				((DoubleClam) specialList.get(i)).display();
+			// Health clams
+			else if(specialList.get(i) instanceof HealthClam)
+				((HealthClam) specialList.get(i)).display();
+		}
 	}
 	
 	// Displays sharks
@@ -242,6 +283,56 @@ public class GameScreen implements Screen {
 		}
 	}
 	
+	// If a special is to be spawned this picks which one
+	void spawnSpecial(){
+		
+		int random = rand.nextInt(3)+1; // For special spawns
+		
+		if(random == 1)
+			specialList.add(new SlowMoClam(game, 0));
+		
+		else if(random == 2)
+			specialList.add(new DoubleClam(game, 0));
+		
+		else if(random == 3)
+			specialList.add(new HealthClam(game, 0));
+	}
+	
+	// Handles special spawning
+	void specialChance(){
+		
+		int random = rand.nextInt(100) + 1;
+		
+		if(random <= 5)
+			spawnSpecial();
+	}
+	
+	// Special collisions and end of screen
+	private void specialCollision(){
+		for(int i = 0; i < specialList.size(); i++){
+			
+			// Player collision or off screen
+			// Slow mo clams
+			if(specialList.get(i) instanceof SlowMoClam){
+				if(((SlowMoClam)specialList.get(i)).hitBox.overlaps(player.hitBox) 
+				|| ((SlowMoClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
+					specialList.remove(i);					
+			}	
+			// Double clams
+			else if(specialList.get(i) instanceof DoubleClam){
+				if(((DoubleClam)specialList.get(i)).hitBox.overlaps(player.hitBox) 
+				|| ((DoubleClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
+					specialList.remove(i);
+			}
+			// Health clams
+			else if(specialList.get(i) instanceof HealthClam){
+				if(((HealthClam)specialList.get(i)).hitBox.overlaps(player.hitBox) 
+				|| ((HealthClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
+					specialList.remove(i);
+			}
+		}
+	}
+	
 	// Clam collision
 	private void clamCollision(){
 		
@@ -252,14 +343,30 @@ public class GameScreen implements Screen {
 				player.hitByClam();
 				score++; // Increase score
 			}
-			
+			// Clam hits clam
 			for(int j = 0; j < clamList.size(); j++){
 				// Clam hits clam
 				if(clamList.get(i).hitBox.overlaps(clamList.get(j).hitBox) && i != j){ 
 					clamList.get(i).respawnClam();
 					clamList.get(j).respawnClam();
 				}
-			}	
+			}
+			// Clam spawns on special
+			for(int k = 0; k < specialList.size(); k++){
+				// Respawn that special
+				// Slow mo clams
+				if(specialList.get(k) instanceof SlowMoClam)
+					if(((SlowMoClam)specialList.get(k)).hitBox.overlaps(clamList.get(i).hitBox))
+						((SlowMoClam) specialList.get(k)).respawnClam();
+				// Double clams
+				else if(specialList.get(k) instanceof DoubleClam)
+					if(((DoubleClam)specialList.get(k)).hitBox.overlaps(clamList.get(i).hitBox))
+						((DoubleClam) specialList.get(k)).respawnClam();
+				// Health clams
+				else if(specialList.get(k) instanceof HealthClam)
+					if(((HealthClam)specialList.get(k)).hitBox.overlaps(clamList.get(i).hitBox))
+						((HealthClam) specialList.get(k)).respawnClam();
+			}
 		}
 	}
 	
@@ -293,6 +400,24 @@ public class GameScreen implements Screen {
 					// Respawn that clam
 					clamList.get(l).respawnClam();
 			}
+			// If shark spawns on special clam at same speed
+			for(int m = 0; m < specialList.size(); m++){
+				if(sharkList.get(i).getSpeed() == sharkList.get(i).STARTSPEED){
+					// Respawn that special
+					// Slow mo clams
+					if(specialList.get(m) instanceof SlowMoClam)
+						if(((SlowMoClam)specialList.get(m)).hitBox.overlaps(sharkList.get(i).hitBox))
+							((SlowMoClam) specialList.get(m)).respawnClam();
+					// Double clams
+					else if(specialList.get(m) instanceof DoubleClam)
+						if(((DoubleClam)specialList.get(m)).hitBox.overlaps(sharkList.get(i).hitBox))
+							((DoubleClam) specialList.get(m)).respawnClam();
+					// Health clams
+					else if(specialList.get(m) instanceof HealthClam)
+						if(((HealthClam)specialList.get(m)).hitBox.overlaps(sharkList.get(i).hitBox))
+							((HealthClam) specialList.get(m)).respawnClam();
+				}	
+			}
 		}		
 	}
 	
@@ -313,12 +438,13 @@ public class GameScreen implements Screen {
 	
 	// Handles levels
 	void levels(){
-	
+		
 		levelTimeCount += delta;
 
 		// Checks if hits level time, must be 0.03 instead of 0
 		if(levelTimeCount >= levelTime){
 			level++;
+			spawnSpecial();
 			// Increase sharks speed
 			for (int i = 0; i < sharkList.size(); i++) {
 				sharkList.get(i).setSpeed((sharkList.get(i).getSpeed() + levelDifficulty));
