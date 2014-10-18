@@ -326,9 +326,14 @@ public class GameScreen implements Screen {
 			}
 			// Health clams
 			else if(specialList.get(i) instanceof HealthClam){
-				if(((HealthClam)specialList.get(i)).hitBox.overlaps(player.hitBox) 
-				|| ((HealthClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
+				if(((HealthClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
 					specialList.remove(i);
+					player.addLife();
+				
+				}
+				else if(((HealthClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
+					specialList.remove(i);
+				
 			}
 		}
 	}

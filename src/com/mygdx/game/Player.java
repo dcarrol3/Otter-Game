@@ -24,7 +24,7 @@ class Player {
 	private int xCoord;	  					// Player x coord
 	private int yCoord;						// Player y coord
 	Rectangle hitBox;	  					// Set hitbox for player
-	Life[] lifeArray;						// Life holder
+	ArrayList<Life> lifeArray;						// Life holder
 	public final int MAXLIVES = 5;			// Max lives
 	private int lives = 3;					// Starting lives
 	public final int INVINTIME = 3;			// Time in seconds for otter to be invincible
@@ -53,9 +53,9 @@ class Player {
 		hitBox.setPosition(xCoord, yCoord); // Match loaction with shark
 		
 		// Build lives
-		lifeArray = new Life[MAXLIVES];
+		lifeArray = new ArrayList<Life>();
 		for (int i = 0; i < MAXLIVES; i++) {
-			lifeArray[i] = new Life(game);
+			lifeArray.add(new Life(game));
 		}
 	}
 	
@@ -89,7 +89,7 @@ class Player {
 		int lifex = 50;
 		
 		for (int i = 0; i < lives; i++) {
-			lifeArray[i].display(lifex);
+			lifeArray.get(i).display(lifex);
 			lifex += 50;
 		}
 		lifex = 50;
@@ -225,7 +225,8 @@ class Player {
 			bite.play();
 			timer = time + (INVINTIME * 1000);
 			lives--;
-			lifeArray[lives].dispose(); // Dispose of life
+			lifeArray.get(lives).dispose(); // Dispose of life
+			lifeArray.remove(lives);
 		}
 		// If invincible time is up
 		if(timer != 0 && time > timer)
@@ -238,6 +239,15 @@ class Player {
 		grabClam.play(); // Play grab clam sound
 		ammo++; // Increase player ammo
 		
+	}
+	
+	// Adds player life
+	void addLife(){
+		
+		if(lives < MAXLIVES){
+			lives++;
+			lifeArray.add(new Life(game));
+		}
 	}
 	
 	// Checks shot delay
@@ -272,9 +282,6 @@ class Player {
 	}
 	
 	void addlife(){}
-	
-	void removeLife(){}
-
 
 	// Garbage collection
 	void dispose() {
