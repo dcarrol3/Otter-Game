@@ -24,12 +24,14 @@ class Player {
 	private int xCoord;	  					// Player x coord
 	private int yCoord;						// Player y coord
 	Rectangle hitBox;	  					// Set hitbox for player
-	ArrayList<Life> lifeArray;						// Life holder
+	ArrayList<Life> lifeArray;				// Life holder
 	public final int MAXLIVES = 5;			// Max lives
 	private int lives = 3;					// Starting lives
-	public final int INVINTIME = 3;			// Time in seconds for otter to be invincible
+	public final int INVINTIME = 1;			// Time in seconds for otter to be invincible
 	private long timer = 0;					// Timer for hitting sharks
 	ArrayList<Bullet> bulletList;			// Handles bullets
+	private int score;						// Handles player score
+	private int scoreOffset = 1;			// Score multiplier
 	Sound bite;								// Shark bite sound
 	Sound shoot;							// Throw clam sound
 	Sound grabClam;							// Pick up clam sound
@@ -41,7 +43,8 @@ class Player {
 		bite = Gdx.audio.newSound(Gdx.files.internal("bite.wav")); // Player hits shark sound
 		shoot = Gdx.audio.newSound(Gdx.files.internal("shoot.mp3")); // Shoot sound
 		grabClam = Gdx.audio.newSound(Gdx.files.internal("grabClam.wav")); // Grab clam sound
-		ammo = 5;
+		ammo = 5;	 // STarting ammo
+		score = 0;	 // Starting score	
 		
 		// Set first position
 		xCoord = 675;
@@ -60,6 +63,10 @@ class Player {
 	}
 	
 	
+	public int getScore() {
+		
+		return score;
+	}
 	
 	public int getAmmo() {
 		return ammo;
@@ -76,6 +83,16 @@ class Player {
 		return yCoord;
 	}
 	
+	public int getScoreOffset() {
+		return scoreOffset;
+	}
+
+
+	public void setScoreOffset(int scoreOffset) {
+		this.scoreOffset = scoreOffset;
+	}
+
+
 	public int getLives() {
 		return lives;
 	}
@@ -238,6 +255,7 @@ class Player {
 		
 		grabClam.play(); // Play grab clam sound
 		ammo++; // Increase player ammo
+		score = score + (1 * scoreOffset); // Increase score
 		
 	}
 	
@@ -281,7 +299,15 @@ class Player {
 			yCoord = game.getHeight() - SPRITEHEIGHT; // Upper boundary
 	}
 	
-	void addlife(){}
+	// Handles increasing score multiplier
+	void increaseScoreMulti(int multi){
+		scoreOffset++;
+	}
+	
+	// Handles decreasing score multiplier
+	void decreaseScoreMulti(int multi){
+		scoreOffset--;
+	}
 
 	// Garbage collection
 	void dispose() {

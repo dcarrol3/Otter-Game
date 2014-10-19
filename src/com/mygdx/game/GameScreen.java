@@ -27,18 +27,18 @@ public class GameScreen implements Screen {
 	public final int STARTINGSHARKS = 5;	// Number of sharks to start with
 	public final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
 	public final int STARTINGCLAMS = 3;		// Starting number of clams
-	int score;						// Handles player score
 	ArrayList<Bullet> bulletList;	// Handles bullets
 	Music music;					// Background music
 	private float playTimeSec = 0.0f; 	  // Game timer seconds
-	private int playTimeMin = 0;	// Game time minutes
 	private float levelTimeCount;	// Helper for keeping track of time
 	private int level;				// Level number
 	public final float levelTime = 15.0f; // Time between levels
 	public final int levelDifficulty = 2; // Sets shark speed increase per level
+	public final float DOUBLETIME = 15.0f;// Time for double bounus
 	private int state;				// Controls game state 0 for paused, 1 for running
 	private float delta;			// In game time keeper
 	Random rand;					// Random
+	ArrayList<Float> doubleTimers;	// Handles timer for double bonus
 	// Pause objects
 	Button quit;					// Quits game
 	Button menu;					// Goes to menu
@@ -52,10 +52,10 @@ public class GameScreen implements Screen {
 		sharkList = new ArrayList<Shark>();
 		clamList = new ArrayList<Clam>();
 		specialList = new ArrayList<Object>();
+		doubleTimers = new ArrayList<Float>();
 		player = new Player(game, bulletList);
 		rand = new Random();
 		buildPause();
-		score = 0;	 // Starting score	
 		state = 1;   // 1 for running, 0 for paused
 		level = 1;   // Starting level
 		levelTimeCount = 0.0f;
@@ -201,7 +201,9 @@ public class GameScreen implements Screen {
 	// Handles display for GameScreen
 	void display(){
 		game.batch.draw(background, 0, 0); // Background
-	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 100, 380);
+	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 30, 380);
+	    game.font.draw(game.batch, ("Score: " + player.getScore()), 100, 380);
+	    if(player.getScoreOffset() > 1){game.font.draw(game.batch, (("x" + player.getScoreOffset())), 170, 380);}
 	    game.font.draw(game.batch, playTime(), 100, 450);
 	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
 	    displayBullets();	// Displays bullets
@@ -301,6 +303,7 @@ public class GameScreen implements Screen {
 	// Handles special spawning
 	void specialChance(){
 		
+		// 5 out of 100 chance per cycle
 		int random = rand.nextInt(100) + 1;
 		
 		if(random <= 5)
@@ -314,25 +317,42 @@ public class GameScreen implements Screen {
 			// Player collision or off screen
 			// Slow mo clams
 			if(specialList.get(i) instanceof SlowMoClam){
-				if(((SlowMoClam)specialList.get(i)).hitBox.overlaps(player.hitBox) 
-				|| ((SlowMoClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
-					specialList.remove(i);					
+				// Player
+				if(((SlowMoClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
+					specialList.remove(i);
+					player.hitByClam();
+				}
+				// Off screen
+				else if(((SlowMoClam)specialList.get(i)).getxCoord() > game.getWidth() + 200){
+					specialList.remove(i);
+				}
 			}	
 			// Double clams
 			else if(specialList.get(i) instanceof DoubleClam){
-				if(((DoubleClam)specialList.get(i)).hitBox.overlaps(player.hitBox) 
-				|| ((DoubleClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
+				// Player
+				if(((DoubleClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
 					specialList.remove(i);
+					player.hitByClam();
+					addDoubleBonus();
+				}
+				// Off screen
+				else if(((DoubleClam)specialList.get(i)).getxCoord() > game.getWidth() + 200){
+					specialList.remove(i);
+				}
 			}
 			// Health clams
 			else if(specialList.get(i) instanceof HealthClam){
+				// Player
 				if(((HealthClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
 					specialList.remove(i);
-					player.addLife();
+					player.hitByClam();
+					player.addLife();	// Add life bonus
 				
 				}
-				else if(((HealthClam)specialList.get(i)).getxCoord() > game.getWidth() + 200)
+				// Off screen
+				else if(((HealthClam)specialList.get(i)).getxCoord() > game.getWidth() + 200){
 					specialList.remove(i);
+				}
 				
 			}
 		}
@@ -346,7 +366,6 @@ public class GameScreen implements Screen {
 			if(clamList.get(i).hitBox.overlaps(player.hitBox)){
 				clamList.get(i).respawnClam(); // Kill clam
 				player.hitByClam();
-				score++; // Increase score
 			}
 			// Clam hits clam
 			for(int j = 0; j < clamList.size(); j++){
@@ -426,6 +445,23 @@ public class GameScreen implements Screen {
 		}		
 	}
 	
+	// Handles adding double bounses
+	void addDoubleBonus(){
+		doubleTimers.add(playTimeSec); // Starts new double timer
+		player.increaseScoreMulti(1);
+	}
+	
+	// Handles removing double bonuses - runs in update
+	void delDoubleBonus(){
+		
+		for(int i = 0; i < doubleTimers.size(); i++)
+			if((doubleTimers.get(i) + DOUBLETIME) <= playTimeSec){
+				player.decreaseScoreMulti(1);
+				doubleTimers.remove(i);
+			}
+			
+	}
+	
 	// When lives are gone
 	void ifDead(){
 		
@@ -437,7 +473,7 @@ public class GameScreen implements Screen {
 			    Thread.currentThread().interrupt();
 			}
 			dispose();
-			game.setScreen(new GameOver(game, score, playTime(), level));
+			game.setScreen(new GameOver(game, player.getScore(), playTime(), level));
 		}
 	}
 	
@@ -468,13 +504,10 @@ public class GameScreen implements Screen {
 	// Handles playtime and converting it to string
 	String playTime(){
 		
-		// Handles converting to minutes
-		if(playTimeSec >= 60){
-			playTimeMin++;
-			playTimeSec = 0.0f;
-		}	
-		 
-		return "Time: " + playTimeMin + (Math.round(playTimeSec) < 10? ":0" : ":") + Math.round(playTimeSec);
+			int playTimeMin = (int) (playTimeSec / 60);
+			int secondsOffset = playTimeMin;
+			
+		return "Time: " + playTimeMin + (Math.round((playTimeSec - (60 * secondsOffset))) < 10? ":0" : ":") + Math.round((playTimeSec - (60 * secondsOffset)));
 	}
 	
 	// Sets game state
