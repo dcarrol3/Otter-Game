@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class SlowMoClam extends Clam {
 	
-	public SlowMoClam(OtterGame gam, int speedOffset) {
-		super(gam, speedOffset);
+	public SlowMoClam(OtterGame gam, float speed) {
+		super(gam);
 		clamSprite = new Texture("purpleclam.png"); // Set to SlowMo clam texture
+		this.speed = speed;
 	}
 	
 	// Handles movement

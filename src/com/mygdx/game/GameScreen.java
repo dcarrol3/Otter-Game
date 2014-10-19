@@ -38,7 +38,11 @@ public class GameScreen implements Screen {
 	private int state;				// Controls game state 0 for paused, 1 for running
 	private float delta;			// In game time keeper
 	Random rand;					// Random
-	ArrayList<Float> doubleTimers;	// Handles timer for double bonus
+	ArrayList<Float> doubleTimers;	// Handles timers for double bonus
+	private float slowMoTimer= 0.0f;// Hanldes SlowMo time
+	private int slowMoState = 0;	// Handles state of slowmo
+	public final float SLOWMULTI = 0.5f; // Multiplier for slow mo
+	public final float SLOWTIME = 15.0f; // Time for SlowMo bonus 
 	// Pause objects
 	Button quit;					// Quits game
 	Button menu;					// Goes to menu
@@ -68,7 +72,7 @@ public class GameScreen implements Screen {
 		
 		// Build clam list
 		for (int i = 0; i < STARTINGCLAMS; i++)
-			clamList.add(new Clam(game, 0));
+			clamList.add(new Clam(game));
 		
 		// Textures
 		background = new Texture("gamebackground.png");
@@ -191,6 +195,8 @@ public class GameScreen implements Screen {
 		    // Logic Checks
 		    player.fireCheck();	// Checks if user hits fire button
 		    levels();
+		    removeSlowMo();
+		    delDoubleBonus();
 		}
 		// If paused
 		else
@@ -203,7 +209,10 @@ public class GameScreen implements Screen {
 		game.batch.draw(background, 0, 0); // Background
 	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 30, 380);
 	    game.font.draw(game.batch, ("Score: " + player.getScore()), 100, 380);
+	    // Double bonus
 	    if(player.getScoreOffset() > 1){game.font.draw(game.batch, (("x" + player.getScoreOffset())), 170, 380);}
+	    // SlowMo
+	    if(slowMoState == 1){game.font.draw(game.batch, "Slow-Mo", 190, 450);}
 	    game.font.draw(game.batch, playTime(), 100, 450);
 	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
 	    displayBullets();	// Displays bullets
@@ -291,13 +300,13 @@ public class GameScreen implements Screen {
 		int random = rand.nextInt(3)+1; // For special spawns
 		
 		if(random == 1)
-			specialList.add(new SlowMoClam(game, 0));
+			specialList.add(new SlowMoClam(game, clamList.get(0).getSpeed()));
 		
 		else if(random == 2)
-			specialList.add(new DoubleClam(game, 0));
+			specialList.add(new DoubleClam(game, clamList.get(0).getSpeed()));
 		
 		else if(random == 3)
-			specialList.add(new HealthClam(game, 0));
+			specialList.add(new HealthClam(game, clamList.get(0).getSpeed()));
 	}
 	
 	// Handles special spawning
@@ -321,6 +330,7 @@ public class GameScreen implements Screen {
 				if(((SlowMoClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
 					specialList.remove(i);
 					player.hitByClam();
+					addSlowMo();		// Starts slow mo
 				}
 				// Off screen
 				else if(((SlowMoClam)specialList.get(i)).getxCoord() > game.getWidth() + 200){
@@ -458,9 +468,104 @@ public class GameScreen implements Screen {
 			if((doubleTimers.get(i) + DOUBLETIME) <= playTimeSec){
 				player.decreaseScoreMulti(1);
 				doubleTimers.remove(i);
+			}	
+	}
+	
+	// Adds SlowMo
+	void addSlowMo(){
+		
+		
+		slowMoTimer = playTimeSec; // Start slow mo timer
+		
+		if(slowMoState == 0){
+			
+			slowMoState = 1;
+			
+			
+			// Slow sharks down
+			for(int i = 0; i < sharkList.size(); i++){
+				sharkList.get(i).setSpeed(sharkList.get(i).getSpeed() * SLOWMULTI);
 			}
 			
+			// Slow bullets down
+			for(int i = 0; i < player.bulletList.size(); i++){
+				bulletList.get(i).setSpeed(bulletList.get(i).getSpeed() * SLOWMULTI);
+			}
+			
+			// Slow future bullets down
+			player.setBulletSpeed(player.getBulletSpeed() * SLOWMULTI);
+			
+			// Slow player movement
+			player.setSpeed(player.getSpeed() * SLOWMULTI);
+			
+			
+			// Slow clams
+			for(int i = 0; i < clamList.size(); i++){
+				clamList.get(i).setSpeed(clamList.get(i).getSpeed() * SLOWMULTI);
+			}
+			
+			// Slow specials
+			for(int i = 0; i < specialList.size(); i++){
+				
+				if(specialList.get(i) instanceof SlowMoClam)
+					((SlowMoClam) specialList.get(i)).setSpeed(((SlowMoClam) specialList.get(i)).getSpeed() * SLOWMULTI);
+				
+				else if(specialList.get(i) instanceof DoubleClam)
+					((DoubleClam) specialList.get(i)).setSpeed(((DoubleClam) specialList.get(i)).getSpeed() * SLOWMULTI);
+				
+				else if(specialList.get(i) instanceof HealthClam)
+					((HealthClam) specialList.get(i)).setSpeed(((HealthClam) specialList.get(i)).getSpeed() * SLOWMULTI);
+			}
+		}
+		
 	}
+	
+	// Removes SlowMo - runs in update
+	void removeSlowMo(){
+		
+		if(slowMoState == 1 && (slowMoTimer + SLOWTIME <= playTimeSec)){
+			
+			// Resume sharks
+			for(int i = 0; i < sharkList.size(); i++){
+				sharkList.get(i).setSpeed(sharkList.get(i).getSpeed() / SLOWMULTI);
+				System.out.println("hi");
+			}
+			
+			// Resume bullets
+			for(int i = 0; i < player.bulletList.size(); i++){
+				bulletList.get(i).setSpeed(bulletList.get(i).getSpeed() / SLOWMULTI);
+			}
+			
+			// Slow future bullets down
+			player.setBulletSpeed(player.getBulletSpeed() / SLOWMULTI);
+			
+			// Resume player movement
+			player.setSpeed(player.getSpeed() / SLOWMULTI);
+			
+			// Resume clams
+			for(int i = 0; i < clamList.size(); i++){
+				clamList.get(i).setSpeed(clamList.get(i).getSpeed() / SLOWMULTI);
+			}
+			
+			// Resume specials
+			for(int i = 0; i < specialList.size(); i++){
+				
+				if(specialList.get(i) instanceof SlowMoClam)
+					((SlowMoClam) specialList.get(i)).setSpeed(((SlowMoClam) specialList.get(i)).getSpeed() / SLOWMULTI);
+				
+				else if(specialList.get(i) instanceof DoubleClam)
+					((DoubleClam) specialList.get(i)).setSpeed(((DoubleClam) specialList.get(i)).getSpeed() / SLOWMULTI);
+				
+				else if(specialList.get(i) instanceof HealthClam)
+					((HealthClam) specialList.get(i)).setSpeed(((HealthClam) specialList.get(i)).getSpeed() / SLOWMULTI);
+			}
+			
+			slowMoState = 0; // Reset Slow Mo state
+			
+		}
+	}
+	
+	
 	
 	// When lives are gone
 	void ifDead(){
@@ -488,10 +593,15 @@ public class GameScreen implements Screen {
 			spawnSpecial();
 			// Increase sharks speed
 			for (int i = 0; i < sharkList.size(); i++) {
-				sharkList.get(i).setSpeed((sharkList.get(i).getSpeed() + levelDifficulty));
+				
+				// Check slow mo state
+				if(slowMoState == 0)
+					sharkList.get(i).setSpeed((sharkList.get(i).getSpeed() + levelDifficulty));
+				else
+					sharkList.get(i).setSpeed((sharkList.get(i).getSpeed() + (levelDifficulty * SLOWMULTI)));
 			}
-			// Add shark
-			sharkList.add(new Shark(game, (level-1)*levelDifficulty));
+			// Add shark (speed constructor for slowmo)
+			sharkList.add(new Shark(game, 0, sharkList.get(0).getSpeed()));
 			levelTimeCount = 0.0f;
 		}		
 	}

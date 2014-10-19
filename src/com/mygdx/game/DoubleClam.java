@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class DoubleClam extends Clam {
 	
-	public DoubleClam(OtterGame gam, int speedOffset) {
-		super(gam, speedOffset);
+	public DoubleClam(OtterGame gam, float speed) {
+		super(gam);
 		clamSprite = new Texture("redclam.png"); // Double clam sprite
+		this.speed = speed;
 	}
 	
 	// Handles movement

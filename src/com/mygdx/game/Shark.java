@@ -11,10 +11,10 @@ import com.badlogic.gdx.math.Rectangle;
 
 class Shark  {
 	Texture sharkSprite;		// Shark texture
-	private int xCoord; 		// X Coord on map
-	private int yCoord;			// Y Coord on map
-	public final int STARTSPEED = 4; // Starting speed for sharks
-	private int speed = STARTSPEED;	 // Speed of sharks
+	private float xCoord; 		// X Coord on map
+	private float yCoord;		// Y Coord on map
+	public final float STARTSPEED = 4.0f; // Starting speed for sharks
+	private float speed = STARTSPEED;	  // Speed of sharks
 	public final int xOffset = 60;   // Hitbox offset from bottom-left corner
 	Random rand;
 	final OtterGame game;
@@ -37,22 +37,40 @@ class Shark  {
 		hitBox.setPosition(xCoord + xOffset, yCoord);// Match loaction with shark
 		 
 	}
+	// Constructor for setting speed
+	public Shark(final OtterGame gam, int speedOffset, float speed) {
+		
+		this.game = gam;
+		
+		sharkSprite = new Texture("shark.png"); // Shark sprite
+		this.speed = speed + speedOffset; 			// speed of sharks
+		rand = new Random();
+		int temp = rand.nextInt(1000)+100*2; 	// random
+		xCoord = temp-temp*2; 					// randomly spawns the sharks
+		yCoord = rand.nextInt(game.getHeight()-40);
+		
+		// construct hitbox
+		hitBox = new Rectangle(); 
+		hitBox.setSize(65, 30); 				// Set size of rectangle
+		hitBox.setPosition(xCoord + xOffset, yCoord);// Match loaction with shark
+		 
+	}
 	
-	public int getxCoord() {
+	public float getxCoord() {
 		return xCoord;
 	}
 
 
-	public int getyCoord() {
+	public float getyCoord() {
 		return yCoord;
 	}
 	
 	
-	public int getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(int spee) {
+	public void setSpeed(float spee) {
 		speed = spee;
 	}
 

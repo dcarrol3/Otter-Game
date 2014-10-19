@@ -11,15 +11,15 @@ import com.badlogic.gdx.math.Rectangle;
 
 class Clam {
 	
-	Texture clamSprite;		// Clam texture
+	Texture clamSprite;			// Clam texture
 	final OtterGame game;	
-	Rectangle hitBox;		// Clam hitbox
-	protected int xCoord;	// X coord
-	protected int yCoord;	// Y coord
-	protected int speed;	// Speed of clams
+	Rectangle hitBox;			// Clam hitbox
+	protected float xCoord;		// X coord
+	protected float yCoord;		// Y coord
+	protected float speed = 4;	// Speed of clams
 	Random rand;
 	
-	public Clam(final OtterGame gam, int speedOffset){
+	public Clam(final OtterGame gam){
 		
 		game = gam;
 		rand = new Random();
@@ -27,7 +27,6 @@ class Clam {
 		int temp = rand.nextInt(1000)+100*2; 	// Random number
 		xCoord = temp-temp*2; 					// Randomly spawns the clams
 		yCoord = rand.nextInt(game.getHeight()-40);
-		speed = 4 + speedOffset; 				// Speed of sharks
 		
 		// Construct hitbox
 		hitBox = new Rectangle(); 
@@ -36,22 +35,22 @@ class Clam {
 	}
 	
 	
-	public int getxCoord() {
+	public float getxCoord() {
 		return xCoord;
 	}
 
 
-	public int getyCoord() {
+	public float getyCoord() {
 		return yCoord;
 	}
 
 
-	public int getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 
 
-	public void setSpeed(int speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 

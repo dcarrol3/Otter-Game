@@ -10,16 +10,17 @@ import com.badlogic.gdx.math.Rectangle;
 public class Bullet{
 	
 	final OtterGame game;
-	Texture bullet;				// Bullet Texture
-	Rectangle hitBox;			// Bullet hitBox
-	private int xCoord;			// X Coord on map
-	private int yCoord;			// Y Coord on map
-	public final int SPEED = 7;	// Handles bullet speed
+	Texture bullet;					// Bullet Texture
+	Rectangle hitBox;				// Bullet hitBox
+	private float xCoord;			// X Coord on map
+	private float yCoord;			// Y Coord on map
+	private float speed;			// Handles bullet speed
 	
-	Bullet(final OtterGame gam, int x, int y){
+	Bullet(final OtterGame gam, float x, float y){
 		game = gam;
 		bullet = new Texture("bullet.png");
 		
+		speed = 7.0f;
 		xCoord = x;
 		yCoord = y;
 		
@@ -29,17 +30,39 @@ public class Bullet{
 		hitBox.setPosition(xCoord, yCoord); // Match loaction with shark
 	}
 	
-	public int getxCoord() {
+	Bullet(final OtterGame gam, float x, float y, float speed){
+		game = gam;
+		bullet = new Texture("bullet.png");
+		
+		this.speed = speed;
+		xCoord = x;
+		yCoord = y;
+		
+		// Build hit box
+		hitBox = new Rectangle();
+		hitBox.setSize(28, 28); // TODO Set size of rectangle
+		hitBox.setPosition(xCoord, yCoord); // Match loaction with shark
+	}
+	
+	public float getxCoord() {
 		return xCoord;
 	}
 
-	public int getyCoord() {
+	public float getyCoord() {
 		return yCoord;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 
 	// Handles bullet movement
 	void movement(){
-		xCoord -= SPEED;
+		xCoord -= speed;
 		hitBox.setPosition(xCoord, yCoord);
 	}
 	

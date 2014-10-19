@@ -18,11 +18,11 @@ class Player {
 	Texture playerSprite; 					// Player texture
 	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
 	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
-	public final byte SPEED = 4; 			// Player speed
+	private float speed = 4.0f; 			// Player speed
 	private int ammo;			  			// Number of clams for shooting
 	public final double  SHOTDELAY = .1;    // Delay between shots in seconds
-	private int xCoord;	  					// Player x coord
-	private int yCoord;						// Player y coord
+	private float xCoord;	  				// Player x coord
+	private float yCoord;					// Player y coord
 	Rectangle hitBox;	  					// Set hitbox for player
 	ArrayList<Life> lifeArray;				// Life holder
 	public final int MAXLIVES = 5;			// Max lives
@@ -30,6 +30,7 @@ class Player {
 	public final int INVINTIME = 1;			// Time in seconds for otter to be invincible
 	private long timer = 0;					// Timer for hitting sharks
 	ArrayList<Bullet> bulletList;			// Handles bullets
+	private float bulletSpeed;				// Handles bullet/throw speed
 	private int score;						// Handles player score
 	private int scoreOffset = 1;			// Score multiplier
 	Sound bite;								// Shark bite sound
@@ -44,11 +45,12 @@ class Player {
 		shoot = Gdx.audio.newSound(Gdx.files.internal("shoot.mp3")); // Shoot sound
 		grabClam = Gdx.audio.newSound(Gdx.files.internal("grabClam.wav")); // Grab clam sound
 		ammo = 5;	 // STarting ammo
-		score = 0;	 // Starting score	
+		score = 0;	 // Starting score
+		bulletSpeed = 7.0f;
 		
 		// Set first position
-		xCoord = 675;
-		yCoord = 214;
+		xCoord = 675.0f;
+		yCoord = 214.0f;
 		
 		// construct hitbox
 		hitBox = new Rectangle(); 
@@ -63,6 +65,16 @@ class Player {
 	}
 	
 	
+	public float getSpeed() {
+		return speed;
+	}
+
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+
 	public int getScore() {
 		
 		return score;
@@ -73,13 +85,13 @@ class Player {
 	}
 
 	// Getter for xCoord
-	public int getxCoord() {
+	public float getxCoord() {
 		return xCoord;
 	}
 
 
 	// Getter for yCoord
-	public int getyCoord() {
+	public float getyCoord() {
 		return yCoord;
 	}
 	
@@ -90,6 +102,16 @@ class Player {
 
 	public void setScoreOffset(int scoreOffset) {
 		this.scoreOffset = scoreOffset;
+	}
+
+
+	public float getBulletSpeed() {
+		return bulletSpeed;
+	}
+
+
+	public void setBulletSpeed(float bulletSpeed) {
+		this.bulletSpeed = bulletSpeed;
 	}
 
 
@@ -192,43 +214,43 @@ class Player {
 		
 		// Left
 		if(direction.equals("left"))
-			xCoord -= SPEED;
+			xCoord -= speed;
 		
 		// Left and up
 		if(direction.equals("left-up")){
-			yCoord += SPEED;
-			xCoord -= SPEED;
+			yCoord += speed;
+			xCoord -= speed;
 		}
 		
 		// Left and down
 		if(direction.equals("left-down")){
-			yCoord -= SPEED;
-			xCoord -= SPEED;
+			yCoord -= speed;
+			xCoord -= speed;
 		}
 		
 		// Right
 		if(direction.equals("right"))
-			xCoord += SPEED;
+			xCoord += speed;
 		
 		// Right and up
 		if(direction.equals("right-up")){
-			yCoord += SPEED;
-			xCoord += SPEED;
+			yCoord += speed;
+			xCoord += speed;
 		}
 		
 		// Right and down
 		if(direction.equals("right-down")){
-			yCoord -= SPEED;
-			xCoord += SPEED;
+			yCoord -= speed;
+			xCoord += speed;
 		}
 		
 		// Down
 		if(direction.equals("down"))
-			yCoord -= SPEED;
+			yCoord -= speed;
 		
 		// Up
 		if(direction.equals("up"))
-			yCoord += SPEED;
+			yCoord += speed;
 		
 		hitBox.setPosition(xCoord, yCoord); // Match location with shark
 	}
@@ -278,7 +300,7 @@ class Player {
 	void fire(){
 		
 		shoot.play(); // Play fire sound
-		bulletList.add(new Bullet(game, xCoord, yCoord));
+		bulletList.add(new Bullet(game, xCoord, yCoord, bulletSpeed));
 		ammo--;
 		
 	}
