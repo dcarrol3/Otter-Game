@@ -124,8 +124,7 @@ public class GameScreen implements Screen {
 	    game.batch.end();
 	   
 	    // Checks if player is dead - MUST be at bottom of render
-	    ifDead();
-	  
+	    ifDead();	  
 	}
 
 	@Override
@@ -158,6 +157,7 @@ public class GameScreen implements Screen {
 	// Disposes of objects on screen
 	@Override
 	public void dispose() {
+		
 		music.stop(); // Stop music
 		background.dispose();
 		player.dispose();
@@ -197,6 +197,7 @@ public class GameScreen implements Screen {
 		    levels();
 		    removeSlowMo();
 		    delDoubleBonus();
+		    
 		}
 		// If paused
 		else

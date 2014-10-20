@@ -18,6 +18,8 @@ public class GameOver implements Screen {
 	Button quit;				// Quit button
 	Button replay;				// Play again button
 	Texture background;			// background
+	private int score;			// Score
+	private int oldScore;		// Previous score
 	String scoreDisplay;		// Score to string
 	String timeDisplay;			// Displays round time
 	String levelDisplay;
@@ -28,6 +30,8 @@ public class GameOver implements Screen {
 		timeDisplay = time;
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480); // Screen size to 800x600
+        this.score = score;
+        oldScore = Options.getHighScore();
         
         buttons();	// Creates buttons
         scoreToString(score);
@@ -35,6 +39,10 @@ public class GameOver implements Screen {
         
         // Textures
      	background = new Texture("gamebackground.png");
+     	
+     	// Update score - must be at end of constructor
+     	Options.setHighScore(score);
+     	Options.saveFile.flush();
 
 	}
 	
@@ -99,7 +107,8 @@ public class GameOver implements Screen {
 	
 	// Displays sprites
 	void display(){
-		 game.font.draw(game.batch, "Game Over", 360, 240);
+		 game.font.draw(game.batch, "Game Over", 360, 210);
+		 displayHighScore(); // Displays high score - 240
 		 game.font.draw(game.batch, scoreDisplay, 360, 270);
 		 game.font.draw(game.batch, timeDisplay, 360, 330);
 		 game.font.draw(game.batch, levelDisplay, 360, 300);
@@ -145,11 +154,21 @@ public class GameOver implements Screen {
 	
 	// How to display score via text
 	private void scoreToString(int score){
-		scoreDisplay = "Your score was: " + score;
+		scoreDisplay = "Your score this round was: " + score;
 	}
 	
 	// How to display levels
 	private void levelToString(int level){
 		levelDisplay = "Level reached: " + level;
+	}
+	
+	// Displays score
+	private void displayHighScore(){
+		
+		if(score > oldScore)
+			game.font.draw(game.batch, "NEW High Score! - " + score, 360, 240);
+		else
+			game.font.draw(game.batch, "High Score: " + oldScore, 360, 240);
+	
 	}
 }

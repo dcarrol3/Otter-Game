@@ -18,7 +18,7 @@ public class Options implements Screen{
 	MuteButton mute;		// Mute in game music
 	Button musicUp;			// Music volume up
 	Button musicDown;		// Music volume down
-	private static Preferences saveFile = Gdx.app.getPreferences("OtterGame"); // Options file
+	static Preferences saveFile = Gdx.app.getPreferences("OtterGame"); // Options file
 	
 	Options(final OtterGame gam){
 		game = gam;
@@ -31,6 +31,14 @@ public class Options implements Screen{
 	
 	public static float getVolume(){
 		return  saveFile.getFloat("Volume");
+	}
+	
+	public static int getHighScore(){
+		return saveFile.getInteger("HighScore");
+	}
+	
+	public static void setHighScore(int score){
+		saveFile.putInteger("HighScore", score);
 	}
 	
 	public static boolean isMuted(){
@@ -157,6 +165,10 @@ public class Options implements Screen{
 		// Creates volume in file
 		if (!saveFile.contains("Volume")) {
 			saveFile.putFloat("Volume", 1.0f);
+		}
+		// Creates High score
+		if (!saveFile.contains("HighScore")){
+			saveFile.putInteger("HighScore", 0);
 		}
 	}
 	

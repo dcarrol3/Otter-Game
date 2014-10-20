@@ -109,6 +109,7 @@ public class MainMenu implements Screen {
 	
 	void displaySprites(){
 		 game.font.draw(game.batch, "Otter Game ", 108, 180);
+		 game.font.draw(game.batch, "High Score: " + Options.getHighScore(), 353, 180); // Displays high score
 		 startButton.display();
 		 quitButton.display();
 		 optionsButton.display();
