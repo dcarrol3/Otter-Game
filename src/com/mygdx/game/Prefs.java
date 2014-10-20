@@ -15,7 +15,7 @@ public class Prefs {
 	}
 	
 	public static void setVolume(float v){
-		Prefs.saveFile.putFloat("Volume", 0.0f);
+		Prefs.saveFile.putFloat("Volume", v);
 		Prefs.saveFile.flush();	// Saves the save file
 	}
 	
@@ -39,6 +39,5 @@ public class Prefs {
 		if (!saveFile.contains("HighScore")){
 			saveFile.putInteger("HighScore", 0);
 		}
-		Prefs.saveFile.flush();	// Saves the save file
 	}
 }
