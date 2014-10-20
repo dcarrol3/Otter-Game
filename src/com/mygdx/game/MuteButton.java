@@ -5,11 +5,9 @@ package com.mygdx.game;
 
 public class MuteButton extends Button{
 	
-	public final static int HEIGHT = 48;
-	public final static int WIDTH = 48;
-	
 	MuteButton(OtterGame gam, int x, int y){
-		super(gam, "mute.png", WIDTH, HEIGHT, x, y);
+		// Width/Height is 48/48
+		super(gam, "mute.png", 48, 48, x, y);
 		swapMute();
 	}
 	

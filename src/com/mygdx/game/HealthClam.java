@@ -15,5 +15,4 @@ public class HealthClam extends Clam {
 		xCoord += speed;
 		hitBox.setPosition(xCoord, yCoord);
 	}
-
 }

@@ -74,6 +74,4 @@ public class Bullet{
 	void dispose(){
 		bullet.dispose();
 	}
-	
-	
 }

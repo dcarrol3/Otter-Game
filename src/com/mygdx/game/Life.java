@@ -8,22 +8,21 @@ import com.badlogic.gdx.graphics.Texture;
 
 class Life {
 	final OtterGame game;
-	Texture lifeSprite; 						// Life sprite
-	private int yCoord = 400;
+	private Texture lifeSprite;  // Life sprite
+	private int yCoord = 400;	 // Height for life sprite
 	
 	public Life(OtterGame gam) {
 		game = gam;
 		lifeSprite = new Texture("life.png"); // Life sprite
 	}
-	
-	void display(int xCoord){
+	// Displays this life
+	public void display(int xCoord){
 		
 		game.batch.draw(lifeSprite, xCoord, yCoord);
 	}
 
-	public void dispose() {
+	void dispose() {
 		lifeSprite.dispose();
 		
 	}
-	
 }

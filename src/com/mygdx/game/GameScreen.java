@@ -6,7 +6,6 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
@@ -18,36 +17,36 @@ import com.badlogic.gdx.graphics.Texture;
 public class GameScreen implements Screen {
 	
 	final OtterGame game;
-	OrthographicCamera camera;		// Main game camera
-	Texture background;				// Background texture
-	Player player;					// Player or otter
-	ArrayList<Shark> sharkList;		// Shark list
-	ArrayList<Clam> clamList;		// Clam list
-	ArrayList<Object> specialList;	// Specials list
+	private OrthographicCamera camera;		// Main game camera
+	private Texture background;				// Background texture
+	private Player player;					// Player or otter
+	private Music music;					// Background music
+	private Random rand;					// Random
+	private ArrayList<Shark> sharkList;		// Shark list
+	private ArrayList<Clam> clamList;		// Clam list
+	private ArrayList<Object> specialList;	// Specials list
+	private ArrayList<Float> doubleTimers;	// Handles timers for double bonus
+	ArrayList<Bullet> bulletList;			// Handles bullets
 	public final int STARTINGSHARKS = 5;	// Number of sharks to start with
 	public final int MAXSHARKS = 20;		// Max sharks that will ever be in the game
 	public final int STARTINGCLAMS = 3;		// Starting number of clams
-	ArrayList<Bullet> bulletList;	// Handles bullets
-	Music music;					// Background music
-	private float playTimeSec = 0.0f; 	  // Game timer seconds
-	private float levelTimeCount;	// Helper for keeping track of time
-	private int level;				// Level number
-	public final float levelTime = 15.0f; // Time between levels
-	public final int levelDifficulty = 2; // Sets shark speed increase per level
-	public final float DOUBLETIME = 15.0f;// Time for double bounus
-	private int state;				// Controls game state 0 for paused, 1 for running
-	private float delta;			// In game time keeper
-	Random rand;					// Random
-	ArrayList<Float> doubleTimers;	// Handles timers for double bonus
-	private float slowMoTimer= 0.0f;// Hanldes SlowMo time
-	private int slowMoState = 0;	// Handles state of slowmo
-	public final float SLOWMULTI = 0.5f; // Multiplier for slow mo
-	public final float SLOWTIME = 15.0f; // Time for SlowMo bonus 
+	public final float levelTime = 15.0f; 	// Time between levels
+	public final int levelDifficulty = 2; 	// Sets shark speed increase per level
+	public final float DOUBLETIME = 15.0f;	// Time for double bounus
+	public final float SLOWMULTI = 0.5f; 	// Multiplier for slow mo
+	public final float SLOWTIME = 15.0f; 	// Time for SlowMo bonus 
+	private float playTimeSec = 0.0f; 	  	// Game timer seconds
+	private float levelTimeCount;			// Helper for keeping track of time
+	private int level;						// Level number
+	private int state;						// Controls game state 0 for paused, 1 for running
+	private float delta;					// In game time keeper
+	private float slowMoTimer= 0.0f;		// Hanldes SlowMo time
+	private int slowMoState = 0;			// Handles state of slowmo
 	// Pause objects
-	Button quit;					// Quits game
-	Button menu;					// Goes to menu
-	Button restart;					// Restarts game
-	Button resume;					// Resumes game
+	Button quit;							// Quits game
+	Button menu;							// Goes to menu
+	Button restart;							// Restarts game
+	Button resume;							// Resumes game
 	
 	
 	public GameScreen(final OtterGame gam){
@@ -79,7 +78,7 @@ public class GameScreen implements Screen {
 		
 		// Sounds
 		music = Gdx.audio.newMusic(Gdx.files.internal("runaway.mp3")); // Load in music file
-		music.setVolume(Options.getVolume());
+		music.setVolume(Prefs.getVolume());
 		music.play(); // Play music
 		 
 		// Camera
@@ -128,22 +127,13 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void show() {}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void hide() {}
 	
 	// Handles pause menu
 	@Override
@@ -313,8 +303,8 @@ public class GameScreen implements Screen {
 	// Handles special spawning
 	void specialChance(){
 		
-		// 5 out of 100 chance per cycle
-		int random = rand.nextInt(100) + 1;
+		// 5 out of 1000 chance per cycle
+		int random = rand.nextInt(1000) + 1;
 		
 		if(random <= 5)
 			spawnSpecial();
@@ -529,7 +519,6 @@ public class GameScreen implements Screen {
 			// Resume sharks
 			for(int i = 0; i < sharkList.size(); i++){
 				sharkList.get(i).setSpeed(sharkList.get(i).getSpeed() / SLOWMULTI);
-				System.out.println("hi");
 			}
 			
 			// Resume bullets

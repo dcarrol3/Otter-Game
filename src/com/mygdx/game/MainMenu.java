@@ -12,10 +12,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 public class MainMenu implements Screen {
 	
 	final OtterGame game;
-	OrthographicCamera camera;	// Main menu camera
-	Button startButton;			// Main start button
-	Button quitButton;			// Menu quit button
-	Button optionsButton;		// Menu options button
+	private OrthographicCamera camera;	// Main menu camera
+	private Button startButton;		// Main start button
+	private Button quitButton;		// Menu quit button
+	private Button optionsButton;	// Menu options button
 	
 	public MainMenu(final OtterGame gam){
 		
@@ -25,11 +25,7 @@ public class MainMenu implements Screen {
        
         
         // Creates buttons
-        createButtons();
-        
-        // Sets default options if needed
-        Options.defaults();
-        
+        createButtons();        
 	}
 	
 	
@@ -65,38 +61,23 @@ public class MainMenu implements Screen {
 
 
 	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resize(int width, int height) {}
 
 
 	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void show() {}
 
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void hide() {}
 
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
 
 	@Override
@@ -109,7 +90,7 @@ public class MainMenu implements Screen {
 	
 	void displaySprites(){
 		 game.font.draw(game.batch, "Otter Game ", 108, 180);
-		 game.font.draw(game.batch, "High Score: " + Options.getHighScore(), 353, 180); // Displays high score
+		 game.font.draw(game.batch, "High Score: " + Prefs.getHighScore(), 353, 180); // Displays high score
 		 startButton.display();
 		 quitButton.display();
 		 optionsButton.display();

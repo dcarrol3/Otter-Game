@@ -31,7 +31,7 @@ public class GameOver implements Screen {
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480); // Screen size to 800x600
         this.score = score;
-        oldScore = Options.getHighScore();
+        oldScore = Prefs.getHighScore();
         
         buttons();	// Creates buttons
         scoreToString(score);
@@ -41,9 +41,7 @@ public class GameOver implements Screen {
      	background = new Texture("gamebackground.png");
      	
      	// Update score - must be at end of constructor
-     	Options.setHighScore(score);
-     	Options.saveFile.flush();
-
+     	Prefs.setHighScore(score);
 	}
 	
 	@Override

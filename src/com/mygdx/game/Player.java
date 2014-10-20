@@ -15,27 +15,30 @@ import com.badlogic.gdx.math.Rectangle;
 class Player {
 	
 	final OtterGame game;
-	Texture playerSprite; 					// Player texture
+	// Handles directions for player
+	private enum Direction {LEFT, RIGHT, UP, DOWN, LEFTUP, LEFTDOWN, RIGHTUP, RIGHTDOWN, STILL}
+	Direction direction = null;				// Handles directions
+	ArrayList<Bullet> bulletList;			// Handles bullets
+	ArrayList<Life> lifeArray;				// Life holder
+	Rectangle hitBox;	  					// Set hitbox for player
+	public final byte MAXLIVES = 5;			// Max lives
+	public final byte INVINTIME = 1;		// Time in seconds for otter to be invincible
 	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
 	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
+	public final double  SHOTDELAY = .1;    // Delay between shots in seconds
+	private Texture playerSprite; 			// Player texture
 	private float speed = 4.0f; 			// Player speed
 	private int ammo;			  			// Number of clams for shooting
-	public final double  SHOTDELAY = .1;    // Delay between shots in seconds
 	private float xCoord;	  				// Player x coord
 	private float yCoord;					// Player y coord
-	Rectangle hitBox;	  					// Set hitbox for player
-	ArrayList<Life> lifeArray;				// Life holder
-	public final int MAXLIVES = 5;			// Max lives
 	private int lives = 3;					// Starting lives
-	public final int INVINTIME = 1;			// Time in seconds for otter to be invincible
 	private long timer = 0;					// Timer for hitting sharks
-	ArrayList<Bullet> bulletList;			// Handles bullets
 	private float bulletSpeed;				// Handles bullet/throw speed
 	private int score;						// Handles player score
 	private int scoreOffset = 1;			// Score multiplier
-	Sound bite;								// Shark bite sound
-	Sound shoot;							// Throw clam sound
-	Sound grabClam;							// Pick up clam sound
+	private Sound bite;						// Shark bite sound
+	private Sound shoot;					// Throw clam sound
+	private Sound grabClam;					// Pick up clam sound
 	
 	public Player(final OtterGame gam, ArrayList<Bullet> bulletList){
 		this.game = gam;
@@ -143,116 +146,120 @@ class Player {
 	}
 	
 	// Main player input
-	String playerInput(){
+	void playerInput(){
 		
-		String direction = "";
+		direction = Direction.STILL;
 		
 		// Left
 		if(Gdx.input.isKeyPressed(Keys.A)){
-			direction = "left";
+			direction = Direction.LEFT;
 			// Left and up
 			if(Gdx.input.isKeyPressed(Keys.W))
-				direction = "left-up";
+				direction = Direction.LEFTUP;
 			// Left and down
 			else if(Gdx.input.isKeyPressed(Keys.S))
-				direction = "left-down";
+				direction = Direction.LEFTDOWN;
 			// No direction
 			else if(Gdx.input.isKeyPressed(Keys.D))
-				direction = "";
+				direction = Direction.STILL;
 		}
 		
 		// Right
 		if(Gdx.input.isKeyPressed(Keys.D)){
-			direction = "right";
+			direction = Direction.RIGHT;
 			// Right and up
 			if(Gdx.input.isKeyPressed(Keys.W))
-				direction = "right-up";
+				direction = Direction.RIGHTUP;
 			// Right and down
 			else if(Gdx.input.isKeyPressed(Keys.S))
-				direction = "right-down";
+				direction = Direction.RIGHTDOWN;
 			// No direction
 			else if(Gdx.input.isKeyPressed(Keys.A))
-				direction = "";
+				direction = Direction.STILL;
 		}
 		
 		// Down
 		if(Gdx.input.isKeyPressed(Keys.S)){
-			direction = "down";
+			direction = Direction.DOWN;
 			// Down and left
 			if(Gdx.input.isKeyPressed(Keys.A))
-				direction = "left-down";
+				direction = Direction.LEFTDOWN;
 			// Down and right
 			else if(Gdx.input.isKeyPressed(Keys.D))
-				direction = "right-down";
+				direction = Direction.RIGHTDOWN;
 			// No direction
 			else if(Gdx.input.isKeyPressed(Keys.W))
-				direction = "";
+				direction = Direction.STILL;
 		}
 		
 		// Up
 		if(Gdx.input.isKeyPressed(Keys.W)){
-			direction = "up";
+			direction = Direction.UP;
 			// Up and left
 			if(Gdx.input.isKeyPressed(Keys.A))
-				direction = "left-up";
+				direction = Direction.LEFTUP;
 			// Up and right
 			else if(Gdx.input.isKeyPressed(Keys.D))
-				direction = "right-up";
+				direction = Direction.RIGHTUP;
 			// No direction
-			else if(Gdx.input.isKeyPressed(Keys.D))
-				direction = "right";
+			else if(Gdx.input.isKeyPressed(Keys.S))
+				direction = Direction.STILL;
 		}
-		
-		return direction;
-		
 	}
 	
+	// Handles player movement
 	void movement(){
 		
-		String direction = playerInput();
+		playerInput();
 		boundries();
 		
-		// Left
-		if(direction.equals("left"))
-			xCoord -= speed;
+		switch (direction) {
 		
-		// Left and up
-		if(direction.equals("left-up")){
+		case STILL:
+			break;
+		
+		case LEFT:
+			xCoord -= speed;
+			break;
+			
+		case RIGHT:
+			xCoord += speed;
+			break;
+			
+		case UP:
+			yCoord += speed;
+			break;
+		
+		case DOWN:
+			yCoord -= speed;
+			break;
+		
+		case LEFTUP:
 			yCoord += speed;
 			xCoord -= speed;
-		}
+			break;
 		
-		// Left and down
-		if(direction.equals("left-down")){
+		case LEFTDOWN:
 			yCoord -= speed;
 			xCoord -= speed;
-		}
+			break;
 		
-		// Right
-		if(direction.equals("right"))
-			xCoord += speed;
-		
-		// Right and up
-		if(direction.equals("right-up")){
+		case RIGHTUP:
 			yCoord += speed;
 			xCoord += speed;
-		}
-		
-		// Right and down
-		if(direction.equals("right-down")){
+			break;
+			
+		case RIGHTDOWN:
 			yCoord -= speed;
 			xCoord += speed;
+			break;
+		
+		default:
+			break;
+			
 		}
 		
-		// Down
-		if(direction.equals("down"))
-			yCoord -= speed;
-		
-		// Up
-		if(direction.equals("up"))
-			yCoord += speed;
-		
-		hitBox.setPosition(xCoord, yCoord); // Match location with shark
+		hitBox.setPosition(xCoord, yCoord); // Match location with player
 	}
 	
 	//Player hits a shark
@@ -336,5 +343,4 @@ class Player {
 		playerSprite.dispose();
 		bite.dispose();
 	}
-	
 }

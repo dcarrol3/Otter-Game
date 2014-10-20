@@ -4,7 +4,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,12 +12,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 public class Options implements Screen{
 	
 	final OtterGame game;
-	OrthographicCamera camera;	// Options camera
-	Button back;			// Back to previous screen
-	MuteButton mute;		// Mute in game music
-	Button musicUp;			// Music volume up
-	Button musicDown;		// Music volume down
-	static Preferences saveFile = Gdx.app.getPreferences("OtterGame"); // Options file
+	private OrthographicCamera camera;	// Options camera
+	private Button back;				// Back to previous screen
+	private MuteButton mute;			// Mute in game music
+	private Button musicUp;				// Music volume up
+	private Button musicDown;			// Music volume down
 	
 	Options(final OtterGame gam){
 		game = gam;
@@ -29,20 +27,8 @@ public class Options implements Screen{
 		buildButtons();
 	}
 	
-	public static float getVolume(){
-		return  saveFile.getFloat("Volume");
-	}
-	
-	public static int getHighScore(){
-		return saveFile.getInteger("HighScore");
-	}
-	
-	public static void setHighScore(int score){
-		saveFile.putInteger("HighScore", score);
-	}
-	
 	public static boolean isMuted(){
-		return (getVolume() < 0.1f);
+		return (Prefs.getVolume() < 0.1f);
 	}
 	
 	
@@ -62,7 +48,7 @@ public class Options implements Screen{
 		
 		// Display screen
 		game.batch.begin();
-		game.font.draw(game.batch, ("Volume: " + (int) (getVolume()*10)), 340, 230);
+		game.font.draw(game.batch, ("Volume: " + (int) (Prefs.getVolume()*10)), 340, 230);
 		display();
 		game.batch.end();
 	}
@@ -132,44 +118,30 @@ public class Options implements Screen{
 	
 	// Returns to previous screen
 	private void goBack() {
-		saveFile.flush();	// Saves the save file
 		dispose();
     	game.setScreen(new MainMenu(game));
 	}
 	
 	// Mutes
 	private void mute(){
-		saveFile.putFloat("Volume", 0.0f);
+		Prefs.setVolume(0.0f);
 	}
 	
 	// Unmutes
 	private void unmute(){
-		saveFile.putFloat("Volume", 1.0f);
+		Prefs.setVolume(1.0f);
 	}
 	
 	// Increases volume
 	private void volumeUp(){
-		if(getVolume() < 1.0f)
-			saveFile.putFloat("Volume", (getVolume() + 0.1f));
+		if(Prefs.getVolume() < 1.0f)
+			Prefs.setVolume(Prefs.getVolume() + 0.1f);
 	}
 	
 	// Decreases volume
 	private void volumeDown(){
 		if(!isMuted())
-			saveFile.putFloat("Volume", (getVolume() - 0.1f));
-	}
-	
-	// Load default values if needed
-	public static void defaults(){
-		
-		// Creates volume in file
-		if (!saveFile.contains("Volume")) {
-			saveFile.putFloat("Volume", 1.0f);
-		}
-		// Creates High score
-		if (!saveFile.contains("HighScore")){
-			saveFile.putInteger("HighScore", 0);
-		}
+			Prefs.setVolume(Prefs.getVolume() - 0.1f);
 	}
 	
 	private void display(){

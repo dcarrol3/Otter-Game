@@ -11,13 +11,13 @@ import com.badlogic.gdx.math.Rectangle;
 
 class Clam {
 	
-	Texture clamSprite;			// Clam texture
+	protected Texture clamSprite;	// Clam texture
 	final OtterGame game;	
-	Rectangle hitBox;			// Clam hitbox
+	protected Rectangle hitBox;	// Clam hitbox
+	protected Random rand;		// Random
 	protected float xCoord;		// X coord
 	protected float yCoord;		// Y coord
 	protected float speed = 4;	// Speed of clams
-	Random rand;
 	
 	public Clam(final OtterGame gam){
 		

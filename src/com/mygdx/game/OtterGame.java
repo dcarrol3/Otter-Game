@@ -32,6 +32,8 @@ public class OtterGame extends Game {
 		// Font
 		fonts();
 		
+		// Sets default prefs if needed
+        Prefs.defaults();
 		
 		// Run Main Menu
 		this.setScreen(new MainMenu(this));

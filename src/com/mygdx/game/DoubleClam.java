@@ -15,5 +15,4 @@ public class DoubleClam extends Clam {
 		xCoord += speed;
 		hitBox.setPosition(xCoord, yCoord);
 	}
-
 }

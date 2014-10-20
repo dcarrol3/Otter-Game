@@ -10,15 +10,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 class Shark  {
-	Texture sharkSprite;		// Shark texture
-	private float xCoord; 		// X Coord on map
-	private float yCoord;		// Y Coord on map
-	public final float STARTSPEED = 4.0f; // Starting speed for sharks
-	private float speed = STARTSPEED;	  // Speed of sharks
-	public final int xOffset = 60;   // Hitbox offset from bottom-left corner
-	Random rand;
 	final OtterGame game;
-	Rectangle hitBox;			// Hit box for sharks
+	public final float STARTSPEED = 4.0f; // Starting speed for sharks
+	public final int xOffset = 60;  	  // Hitbox offset from bottom-left corner
+	private Texture sharkSprite;		// Shark texture
+	private float xCoord; 				// X Coord on map
+	private float yCoord;				// Y Coord on map
+	private float speed = STARTSPEED;	// Speed of sharks
+	private Random rand;				// Handles random
+	Rectangle hitBox;					// Hit box for sharks
 
 	public Shark(final OtterGame gam, int speedOffset) {
 	
@@ -102,7 +102,4 @@ class Shark  {
 	void dispose() {
 		sharkSprite.dispose();
 	}
-	
-	
-	
 }
