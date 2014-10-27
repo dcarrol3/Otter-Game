@@ -1,4 +1,0 @@
-TODO list:
-new music/sounds
-Add clams
-Add score

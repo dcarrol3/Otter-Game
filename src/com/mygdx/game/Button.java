@@ -13,10 +13,10 @@ public class Button {
 	private Sound sound;	// Button sound
 	private Texture button;	// Main button Texture
 	private Texture highlightedTexture; // If texture is highlighted
-	private int height;		// Button height
-	private int width;		// Button width
-	private int xCoord;		// Button x coord
-	private int yCoord;		// Button y coord
+	private float height;		// Button height
+	private float width;		// Button width
+	private float xCoord;		// Button x coord
+	private float yCoord;		// Button y coord
 	
 	public Button(final OtterGame gam, String file, int w, int h, int x, int y){
 		game = gam;
@@ -43,7 +43,7 @@ public class Button {
 		
 	}
 	// Getters/Setters
-	public int getxCoord() {
+	public float getxCoord() {
 		return xCoord;
 	}
 
@@ -51,7 +51,7 @@ public class Button {
 		this.xCoord = xCoord;
 	}
 
-	public int getyCoord() {
+	public float getyCoord() {
 		return yCoord;
 	}
 
@@ -59,7 +59,7 @@ public class Button {
 		this.yCoord = yCoord;
 	}
 
-	public int getWidth() {
+	public float getWidth() {
 		return width;
 	}
 	
@@ -67,7 +67,7 @@ public class Button {
 		this.width = width;
 	}
 	
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 	
@@ -88,7 +88,7 @@ public class Button {
 	boolean isPressed(){
 		boolean pressed = false;
 		if(isHighlighted()){
-			if(Gdx.input.isTouched() || Gdx.input.justTouched()){
+			if(Gdx.input.justTouched()){
 				pressed = true;
 				sound.play(); // Plays sound
 				// Sleeps so sound can be played
@@ -104,19 +104,43 @@ public class Button {
 	
 	// Checks if button is hovered over by mouse
 	private boolean isHighlighted(){
-		int x = Gdx.input.getX();
-		int y = Gdx.input.getY();
-		boolean highlighted = false;
 		
-		if(x >= xCoord && x <= xCoord + width){
-			if(y <= (game.getHeight() - yCoord) && y >= (game.getHeight() - yCoord) - height)
-				highlighted = true;
+		boolean highlighted = false;
+		float x = Gdx.input.getX();
+		float y = Gdx.input.getY();
+		
+		switch(Gdx.app.getType()) {
+			// Desktop
+			case Desktop:
+				if(x >= xCoord && x <= xCoord + width){
+					if(y <= (game.getHeight() - yCoord) && y >= (game.getHeight() - yCoord) - height)
+						highlighted = true;
+				}
+				break;
+		   
+			// Android
+			case Android:
+				// Android specific coords
+				x = game.convertX(x);
+				y = game.convertY(y); 
+				
+				// Compensates for screen resolution
+				if(x >= xCoord && x <= xCoord + width){
+					if(y <= (game.getHeight() - yCoord) && y >= (game.getHeight() - yCoord) - height)
+						highlighted = true;
+				}
+				break;
+			
+			default:
+				break;
 		}
+		
 		return highlighted;
 	}
 	
 	// Displays buttons
 	void display(){
+		// If isHighlighted is true and it's running on desktop
 		if(isHighlighted())
 			game.batch.draw(highlightedTexture, xCoord, yCoord);
 		else

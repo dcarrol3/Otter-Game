@@ -7,12 +7,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class MainMenu implements Screen {
 	
 	final OtterGame game;
-	private OrthographicCamera camera;	// Main menu camera
 	private Button startButton;		// Main start button
 	private Button quitButton;		// Menu quit button
 	private Button optionsButton;	// Menu options button
@@ -20,10 +18,6 @@ public class MainMenu implements Screen {
 	public MainMenu(final OtterGame gam){
 		
 		game = gam;
-		camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480); // Screen size to 800x480
-       
-        
         // Creates buttons
         createButtons();        
 	}
@@ -37,8 +31,8 @@ public class MainMenu implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         // Updates camera
-        camera.update();
-        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.setProjectionMatrix(game.camera.combined);
+        game.camera.update();
         
         // Sprite batch
         game.batch.begin();
@@ -89,6 +83,10 @@ public class MainMenu implements Screen {
 	}
 	
 	void displaySprites(){
+		 game.font.draw(game.batch, ("Conx: " + game.convertX(100)), 108, 360);
+		 game.font.draw(game.batch, ("Cony: " + game.convertY(800)), 108, 340);
+		 game.font.draw(game.batch, ("xCoord: " + Gdx.input.getX()), 108, 320);
+		 game.font.draw(game.batch, ("yCoord: " + Gdx.input.getY()), 108, 300);
 		 game.font.draw(game.batch, "Otter Game ", 108, 180);
 		 game.font.draw(game.batch, "High Score: " + Prefs.getHighScore(), 353, 180); // Displays high score
 		 startButton.display();

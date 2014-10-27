@@ -23,8 +23,8 @@ class Player {
 	Rectangle hitBox;	  					// Set hitbox for player
 	public final byte MAXLIVES = 5;			// Max lives
 	public final byte INVINTIME = 1;		// Time in seconds for otter to be invincible
-	public final byte SPRITEWIDTH = 100; 	// Player sprite width (y)
-	public final byte SPRITEHEIGHT = 50;	// Player sprite height (x)
+	public final short SPRITEWIDTH = 179; 	// Player sprite width (x)
+	public final byte SPRITEHEIGHT = 50;	// Player sprite height (y)
 	public final double  SHOTDELAY = .1;    // Delay between shots in seconds
 	private Texture playerSprite; 			// Player texture
 	private float speed = 4.0f; 			// Player speed
@@ -210,53 +210,71 @@ class Player {
 	// Handles player movement
 	void movement(){
 		
-		playerInput();
 		boundries();
 		
-		switch (direction) {
+		switch(Gdx.app.getType()){
 		
-		case STILL:
-			break;
-		
-		case LEFT:
-			xCoord -= speed;
-			break;
+		// Desktop
+		case Desktop:
 			
-		case RIGHT:
-			xCoord += speed;
-			break;
+			playerInput();
 			
-		case UP:
-			yCoord += speed;
-			break;
-		
-		case DOWN:
-			yCoord -= speed;
-			break;
-		
-		case LEFTUP:
-			yCoord += speed;
-			xCoord -= speed;
-			break;
-		
-		case LEFTDOWN:
-			yCoord -= speed;
-			xCoord -= speed;
-			break;
-		
-		case RIGHTUP:
-			yCoord += speed;
-			xCoord += speed;
-			break;
+			switch (direction) {
 			
-		case RIGHTDOWN:
-			yCoord -= speed;
-			xCoord += speed;
+			case STILL:
+				break;
+			
+			case LEFT:
+				xCoord -= speed;
+				break;
+				
+			case RIGHT:
+				xCoord += speed;
+				break;
+				
+			case UP:
+				yCoord += speed;
+				break;
+			
+			case DOWN:
+				yCoord -= speed;
+				break;
+			
+			case LEFTUP:
+				yCoord += speed;
+				xCoord -= speed;
+				break;
+			
+			case LEFTDOWN:
+				yCoord -= speed;
+				xCoord -= speed;
+				break;
+			
+			case RIGHTUP:
+				yCoord += speed;
+				xCoord += speed;
+				break;
+				
+			case RIGHTDOWN:
+				yCoord -= speed;
+				xCoord += speed;
+				break;
+			
+			default:
+				break;
+				
+			}
 			break;
 		
+	    // Android
+		case Android:
+			// X Coord: places location half way through the player
+			xCoord = game.convertX(Gdx.input.getX()) - (SPRITEWIDTH);
+			// Y coord: fixes coordinate flip 
+			yCoord = (game.getHeight() - game.convertY(Gdx.input.getY()));
+			
 		default:
 			break;
-			
 		}
 		
 		hitBox.setPosition(xCoord, yCoord); // Match location with player
