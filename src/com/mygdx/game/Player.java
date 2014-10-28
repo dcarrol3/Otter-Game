@@ -210,7 +210,7 @@ class Player {
 	// Handles player movement
 	void movement(){
 		
-		boundries();
+		
 		
 		switch(Gdx.app.getType()){
 		
@@ -264,14 +264,27 @@ class Player {
 				break;
 				
 			}
+			
+			boundries();
 			break;
 		
 	    // Android
 		case Android:
-			// X Coord: places location half way through the player
-			xCoord = game.convertX(Gdx.input.getX()) - (SPRITEWIDTH);
-			// Y coord: fixes coordinate flip 
-			yCoord = (game.getHeight() - game.convertY(Gdx.input.getY()));
+			
+			float x = game.convertX(Gdx.input.getX());
+			float y = game.convertY(Gdx.input.getY());
+			
+			// If touch down is near player location, 50 for room for error
+			if((x >= (xCoord - 50)) && (x <= (xCoord + SPRITEWIDTH + 50)) && 
+			  ((game.getHeight() - y) >= (yCoord - SPRITEHEIGHT - 100)) && 
+			  ((game.getHeight() - y) <= (yCoord + SPRITEHEIGHT + 100))){
+				// X Coord: places location half way through the player
+				xCoord = x - SPRITEWIDTH;
+				// Y coord: fixes coordinate flip 
+				yCoord = (game.getHeight() - y);
+				boundries();
+			}
+			break;
 			
 		default:
 			break;
@@ -315,11 +328,31 @@ class Player {
 		}
 	}
 	
-	// Checks shot delay
+	// Checks for shooting requirements
 	void fireCheck(){
 		
-		if(Gdx.input.isKeyJustPressed(Keys.SPACE) && ammo > 0)
+		switch(Gdx.app.getType()){
+		
+		// Desktop
+		case Desktop:
+			if(Gdx.input.isKeyJustPressed(Keys.SPACE) && ammo > 0)
 				fire();
+			break;
+		// Android
+		case Android:
+			// If second finger touches down OR if first finger is not near player
+			if((Gdx.input.justTouched() && Gdx.input.isTouched(1)) ||
+			  (Gdx.input.justTouched() && !((game.convertX(Gdx.input.getX()) >= (xCoord - 50)) && 
+			  (game.convertX(Gdx.input.getX()) <= (xCoord + SPRITEWIDTH + 50)) && 
+			  ((game.getHeight() - game.convertY(Gdx.input.getY())) >= (yCoord - SPRITEHEIGHT - 100)) && 
+			  ((game.getHeight() - game.convertY(Gdx.input.getY())) <= (yCoord + SPRITEHEIGHT + 100))))&& 
+			  ammo > 0){
+				fire();
+			}
+			break;
+		default:
+			break;		
+		}
 	}
 	
 	void fire(){
@@ -344,6 +377,7 @@ class Player {
 			yCoord = 0;
 		else if(yCoord + SPRITEHEIGHT>= game.getHeight())
 			yCoord = game.getHeight() - SPRITEHEIGHT; // Upper boundary
+			
 	}
 	
 	// Handles increasing score multiplier
