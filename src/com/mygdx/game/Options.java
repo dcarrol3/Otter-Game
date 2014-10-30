@@ -15,8 +15,7 @@ public class Options implements Screen{
 	private OrthographicCamera camera;	// Options camera
 	private Button back;				// Back to previous screen
 	private MuteButton mute;			// Mute in game music
-	private Button musicUp;				// Music volume up
-	private Button musicDown;			// Music volume down
+	private SliderButton musicSlider;	// Volume Slider
 	
 	Options(final OtterGame gam){
 		game = gam;
@@ -25,6 +24,7 @@ public class Options implements Screen{
         camera.setToOrtho(false, 800, 480); // Screen size to 800x480
 		
 		buildButtons();
+		
 	}
 	
 	public static boolean isMuted(){
@@ -45,6 +45,7 @@ public class Options implements Screen{
 		// Check button states
 		logic();
 		mute.swapMute();
+		musicSlider.moveButton(true);
 		
 		// Display screen
 		game.batch.begin();
@@ -86,13 +87,13 @@ public class Options implements Screen{
 	@Override
 	public void dispose() {
 		back.dispose();
-		mute.dispose();
-		musicUp.dispose();
-		musicDown.dispose();
-		
+		mute.dispose();		
 	}
 	
 	private void logic(){
+		
+		
+		Prefs.setVolume(musicSlider.getPosOnBarH());
 		
 		// Go back
 		if(back.isPressed() || Gdx.input.isKeyJustPressed(Keys.ESCAPE))
@@ -106,14 +107,6 @@ public class Options implements Screen{
 				unmute();
 		}
 		
-		// Volume up
-		else if(musicUp.isPressed())
-			volumeUp();
-		
-		// Volume down
-		else if(musicDown.isPressed())
-			volumeDown();
-		
 	}
 	
 	// Returns to previous screen
@@ -122,33 +115,25 @@ public class Options implements Screen{
     	game.setScreen(new MainMenu(game));
 	}
 	
-	// Mutes
+	// Mutes 
 	private void mute(){
 		Prefs.setVolume(0.0f);
+		musicSlider.setPosOnBarH(Prefs.getVolume());
 	}
 	
 	// Unmutes
 	private void unmute(){
 		Prefs.setVolume(1.0f);
+		musicSlider.setPosOnBarH(Prefs.getVolume());
 	}
-	
-	// Increases volume
-	private void volumeUp(){
-		if(Prefs.getVolume() < 1.0f)
-			Prefs.setVolume(Prefs.getVolume() + 0.1f);
-	}
-	
-	// Decreases volume
-	private void volumeDown(){
-		if(!isMuted())
-			Prefs.setVolume(Prefs.getVolume() - 0.1f);
-	}
+
 	
 	private void display(){
 		back.display();
 		mute.display();
-		musicUp.display();
-		musicDown.display();
+		musicSlider.display();
+		
+		
 	}
 	
 	private void buildButtons(){
@@ -156,14 +141,16 @@ public class Options implements Screen{
         back = new Button(game, "back_np.png", 40, 64, 50, 400);
         back.setPressedTexture("back_p.png");
         
+        //Slider
+        musicSlider = new SliderButton(game, "sliderBackground.png", "sliderKnob.png", 300, 36, 47, 220, 240, true);
+        musicSlider.setPosOnBarH(Prefs.getVolume());
+        
         // Create mute button
-        mute = new MuteButton(game, 350, 240);
+        mute = new MuteButton(game, 350, 270);
         
-        // Create Volume up button
-        musicUp = new Button(game, "up.png", 48, 48, 420, 240);
-        
-        // Create Volume down button
-        musicDown = new Button(game, "down.png", 48, 48, 280, 240);
 	}
 	
+	void sliderLogic(){
+		
+	}
 }

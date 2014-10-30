@@ -10,13 +10,13 @@ import com.badlogic.gdx.graphics.Texture;
 public class Button {
 	
 	final OtterGame game;
-	private Sound sound;	// Button sound
-	private Texture button;	// Main button Texture
+	private Sound sound;		// Button sound
+	protected Texture button;	// Main button Texture
 	private Texture highlightedTexture; // If texture is highlighted
-	private float height;		// Button height
-	private float width;		// Button width
-	private float xCoord;		// Button x coord
-	private float yCoord;		// Button y coord
+	protected float height;		// Button height
+	protected float width;		// Button width
+	protected float xCoord;		// Button x coord
+	protected float yCoord;		// Button y coord
 	
 	public Button(final OtterGame gam, String file, int w, int h, int x, int y){
 		game = gam;
@@ -27,7 +27,6 @@ public class Button {
 		width = w;
 		xCoord = x;
 		yCoord = y;
-		
 	}
 	
 	// Constructor for adding custom sound
@@ -39,9 +38,9 @@ public class Button {
 		height = h;
 		width = w;
 		xCoord = x;
-		yCoord = y;
-		
+		yCoord = y;		
 	}
+	
 	// Getters/Setters
 	public float getxCoord() {
 		return xCoord;
@@ -103,40 +102,20 @@ public class Button {
 	}
 	
 	// Checks if button is hovered over by mouse
-	private boolean isHighlighted(){
+	boolean isHighlighted(){
 		
 		boolean highlighted = false;
-		float x = Gdx.input.getX();
-		float y = Gdx.input.getY();
-		
-		switch(Gdx.app.getType()) {
-			// Desktop
-			case Desktop:
-				if(x >= xCoord && x <= xCoord + width){
-					if(y <= (game.getHeight() - yCoord) && y >= (game.getHeight() - yCoord) - height)
-						highlighted = true;
-				}
-				break;
-		   
-			// Android
-			case Android:
-				// Android specific coords
-				x = game.convertX(x);
-				y = game.convertY(y); 
-				
-				// Compensates for screen resolution
-				if(x >= xCoord && x <= xCoord + width){
-					if(y <= (game.getHeight() - yCoord) && y >= (game.getHeight() - yCoord) - height)
-						highlighted = true;
-				}
-				break;
+		float x = game.convertX(Gdx.input.getX());
+		float y = game.convertY(Gdx.input.getY());
 			
-			default:
-				break;
+		if(x >= xCoord && x <= xCoord + width){
+			if(y <= (game.getHeight() - yCoord) && y >= (game.getHeight() - yCoord) - height)
+				highlighted = true;
 		}
-		
+				
 		return highlighted;
 	}
+	
 	
 	// Displays buttons
 	void display(){
