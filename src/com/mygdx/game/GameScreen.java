@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
 		
 		// Sounds
 		music = Gdx.audio.newMusic(Gdx.files.internal("runaway.mp3")); // Load in music file
-		music.setVolume(Prefs.getVolume());
+		music.setVolume(Prefs.getMusicVolume());
 		music.play(); // Play music
 		 
 		// Camera
@@ -561,7 +561,7 @@ public class GameScreen implements Screen {
 	
 	// Sets game state
 	void gameState(){
-		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)){
+		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Keys.BACK)){
 			// Pause
 			if(state == 1){
 				state = 0;

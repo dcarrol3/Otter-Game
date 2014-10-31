@@ -10,12 +10,12 @@ import com.badlogic.gdx.Preferences;
 public class Prefs {
 	private static Preferences saveFile = Gdx.app.getPreferences("OtterGame"); // Options/Score file
 	
-	public static float getVolume(){
-		return  saveFile.getFloat("Volume");
+	public static float getMusicVolume(){
+		return  saveFile.getFloat("MusicVolume");
 	}
 	
-	public static void setVolume(float v){
-		Prefs.saveFile.putFloat("Volume", v);
+	public static void setMusicVolume(float v){
+		Prefs.saveFile.putFloat("MusicVolume", v);
 		Prefs.saveFile.flush();	// Saves the save file
 	}
 	
@@ -28,16 +28,30 @@ public class Prefs {
 		Prefs.saveFile.flush();	// Saves the save file
 	}
 	
+	public static float getSoundVolume(){
+		return  saveFile.getFloat("SoundVolume");
+	}
+	
+	public static void setSoundVolume(float sv){
+		Prefs.saveFile.putFloat("SoundVolume", sv);
+		Prefs.saveFile.flush();	// Saves the save file
+	}
+	
 	// Load default values if needed
 	public static void defaults(){
 		
 		// Creates volume in file
-		if (!saveFile.contains("Volume")) {
-			saveFile.putFloat("Volume", 1.0f);
+		if (!saveFile.contains("MusicVolume")) {
+			saveFile.putFloat("MusicVolume", 1.0f);
 		}
 		// Creates High score
 		if (!saveFile.contains("HighScore")){
 			saveFile.putInteger("HighScore", 0);
 		}
+		// Creates volume in file
+		if (!saveFile.contains("SoundsVolume")) {
+			saveFile.putFloat("SoundsVolume", 1.0f);
+		}
+		
 	}
 }

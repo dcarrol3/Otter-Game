@@ -18,6 +18,10 @@ public class MainMenu implements Screen {
 	public MainMenu(final OtterGame gam){
 		
 		game = gam;
+		
+		// Capture back button - Android/iOS
+		Gdx.input.setCatchBackKey(true); 
+		
         // Creates buttons
         createButtons();        
 	}

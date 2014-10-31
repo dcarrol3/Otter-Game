@@ -89,7 +89,7 @@ public class Button {
 		if(isHighlighted()){
 			if(Gdx.input.justTouched()){
 				pressed = true;
-				sound.play(); // Plays sound
+				sound.play(Prefs.getSoundVolume()); // Plays sound
 				// Sleeps so sound can be played
 				try {
 				    Thread.sleep(200);                

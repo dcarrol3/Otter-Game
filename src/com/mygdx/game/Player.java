@@ -294,7 +294,7 @@ class Player {
 		long time = System.currentTimeMillis();
 		// Set time and timer
 		if(timer == 0){
-			bite.play();
+			bite.play(Prefs.getSoundVolume());
 			timer = time + (INVINTIME * 1000);
 			lives--;
 			lifeArray.get(lives).dispose(); // Dispose of life
@@ -308,7 +308,7 @@ class Player {
 	// Player hits a clam
 	void hitByClam(){
 		
-		grabClam.play(); // Play grab clam sound
+		grabClam.play(Prefs.getSoundVolume()); // Play grab clam sound
 		ammo++; // Increase player ammo
 		score = score + (1 * scoreOffset); // Increase score
 		
@@ -347,7 +347,7 @@ class Player {
 	
 	void fire(){
 		
-		shoot.play(); // Play fire sound
+		shoot.play(Prefs.getSoundVolume()); // Play fire sound
 		bulletList.add(new Bullet(game, xCoord, yCoord, bulletSpeed));
 		ammo--;
 		
