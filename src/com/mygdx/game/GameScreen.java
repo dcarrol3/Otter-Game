@@ -24,7 +24,7 @@ public class GameScreen implements Screen {
 	private Random rand;					// Random
 	private ArrayList<Shark> sharkList;		// Shark list
 	private ArrayList<Clam> clamList;		// Clam list
-	private ArrayList<Object> specialList;	// Specials list
+	private ArrayList<Clam> specialList;	// Specials list
 	private ArrayList<Float> doubleTimers;	// Handles timers for double bonus
 	ArrayList<Bullet> bulletList;			// Handles bullets
 	public final int STARTINGSHARKS = 5;	// Number of sharks to start with
@@ -54,7 +54,7 @@ public class GameScreen implements Screen {
 		bulletList = new ArrayList<Bullet>();
 		sharkList = new ArrayList<Shark>();
 		clamList = new ArrayList<Clam>();
-		specialList = new ArrayList<Object>();
+		specialList = new ArrayList<Clam>();
 		doubleTimers = new ArrayList<Float>();
 		player = new Player(game, bulletList);
 		rand = new Random();
@@ -229,15 +229,8 @@ public class GameScreen implements Screen {
 	// Handles specials movement
 	private void moveSpecials(){
 		for(int i = 0; i < specialList.size(); i++){
-			// Slow mo clams
-			if(specialList.get(i) instanceof SlowMoClam)
-				((SlowMoClam) specialList.get(i)).movement();
-			// Double clams
-			else if(specialList.get(i) instanceof DoubleClam)
-				((DoubleClam) specialList.get(i)).movement();
-			// Health clams
-			else if(specialList.get(i) instanceof HealthClam)
-				((HealthClam) specialList.get(i)).movement();
+			specialList.get(i).movement();
+			
 		}
 	}
 	
@@ -250,15 +243,7 @@ public class GameScreen implements Screen {
 	// Handles displaying specials
 	private void displaySpecials(){
 		for(int i = 0; i < specialList.size(); i++){
-			// Slow mo clams
-			if(specialList.get(i) instanceof SlowMoClam)
-				((SlowMoClam) specialList.get(i)).display();
-			// Double clams
-			else if(specialList.get(i) instanceof DoubleClam)
-				((DoubleClam) specialList.get(i)).display();
-			// Health clams
-			else if(specialList.get(i) instanceof HealthClam)
-				((HealthClam) specialList.get(i)).display();
+			specialList.get(i).display();
 		}
 	}
 	
@@ -318,40 +303,40 @@ public class GameScreen implements Screen {
 			// Slow mo clams
 			if(specialList.get(i) instanceof SlowMoClam){
 				// Player
-				if(((SlowMoClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
+				if(specialList.get(i).hitBox.overlaps(player.hitBox)){
 					specialList.remove(i);
 					player.hitByClam();
 					addSlowMo();		// Starts slow mo
 				}
 				// Off screen
-				else if(((SlowMoClam)specialList.get(i)).getxCoord() > game.getWidth() + 200){
+				else if(specialList.get(i).getxCoord() > game.getWidth() + 200){
 					specialList.remove(i);
 				}
 			}	
 			// Double clams
 			else if(specialList.get(i) instanceof DoubleClam){
 				// Player
-				if(((DoubleClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
+				if(specialList.get(i).hitBox.overlaps(player.hitBox)){
 					specialList.remove(i);
 					player.hitByClam();
 					addDoubleBonus();
 				}
 				// Off screen
-				else if(((DoubleClam)specialList.get(i)).getxCoord() > game.getWidth() + 200){
+				else if(specialList.get(i).getxCoord() > game.getWidth() + 200){
 					specialList.remove(i);
 				}
 			}
 			// Health clams
 			else if(specialList.get(i) instanceof HealthClam){
 				// Player
-				if(((HealthClam)specialList.get(i)).hitBox.overlaps(player.hitBox)){
+				if(specialList.get(i).hitBox.overlaps(player.hitBox)){
 					specialList.remove(i);
 					player.hitByClam();
 					player.addLife();	// Add life bonus
 				
 				}
 				// Off screen
-				else if(((HealthClam)specialList.get(i)).getxCoord() > game.getWidth() + 200){
+				else if(specialList.get(i).getxCoord() > game.getWidth() + 200){
 					specialList.remove(i);
 				}
 				
@@ -379,18 +364,8 @@ public class GameScreen implements Screen {
 			// Clam spawns on special
 			for(int k = 0; k < specialList.size(); k++){
 				// Respawn that special
-				// Slow mo clams
-				if(specialList.get(k) instanceof SlowMoClam)
-					if(((SlowMoClam)specialList.get(k)).hitBox.overlaps(clamList.get(i).hitBox))
-						((SlowMoClam) specialList.get(k)).respawnClam();
-				// Double clams
-				else if(specialList.get(k) instanceof DoubleClam)
-					if(((DoubleClam)specialList.get(k)).hitBox.overlaps(clamList.get(i).hitBox))
-						((DoubleClam) specialList.get(k)).respawnClam();
-				// Health clams
-				else if(specialList.get(k) instanceof HealthClam)
-					if(((HealthClam)specialList.get(k)).hitBox.overlaps(clamList.get(i).hitBox))
-						((HealthClam) specialList.get(k)).respawnClam();
+				if(specialList.get(k).hitBox.overlaps(clamList.get(i).hitBox))
+					specialList.get(k).respawnClam();
 			}
 		}
 	}
@@ -421,26 +396,16 @@ public class GameScreen implements Screen {
 			// If shark spawns on clam at same speed
 			for (int l = 0; l < clamList.size(); l++){
 				if(sharkList.get(i).getSpeed() == sharkList.get(i).STARTSPEED 
-				&& clamList.get(l).hitBox.overlaps(sharkList.get(i).hitBox))
+				&& slowMoState == 0 && clamList.get(l).hitBox.overlaps(sharkList.get(i).hitBox))
 					// Respawn that clam
 					clamList.get(l).respawnClam();
 			}
 			// If shark spawns on special clam at same speed
 			for(int m = 0; m < specialList.size(); m++){
-				if(sharkList.get(i).getSpeed() == sharkList.get(i).STARTSPEED){
+				if(sharkList.get(i).getSpeed() == sharkList.get(i).STARTSPEED && slowMoState == 0){
 					// Respawn that special
-					// Slow mo clams
-					if(specialList.get(m) instanceof SlowMoClam)
-						if(((SlowMoClam)specialList.get(m)).hitBox.overlaps(sharkList.get(i).hitBox))
-							((SlowMoClam) specialList.get(m)).respawnClam();
-					// Double clams
-					else if(specialList.get(m) instanceof DoubleClam)
-						if(((DoubleClam)specialList.get(m)).hitBox.overlaps(sharkList.get(i).hitBox))
-							((DoubleClam) specialList.get(m)).respawnClam();
-					// Health clams
-					else if(specialList.get(m) instanceof HealthClam)
-						if(((HealthClam)specialList.get(m)).hitBox.overlaps(sharkList.get(i).hitBox))
-							((HealthClam) specialList.get(m)).respawnClam();
+					if(specialList.get(m).hitBox.overlaps(sharkList.get(i).hitBox))
+						specialList.get(m).respawnClam();
 				}	
 			}
 		}		
@@ -497,15 +462,7 @@ public class GameScreen implements Screen {
 			
 			// Slow specials
 			for(int i = 0; i < specialList.size(); i++){
-				
-				if(specialList.get(i) instanceof SlowMoClam)
-					((SlowMoClam) specialList.get(i)).setSpeed(((SlowMoClam) specialList.get(i)).getSpeed() * SLOWMULTI);
-				
-				else if(specialList.get(i) instanceof DoubleClam)
-					((DoubleClam) specialList.get(i)).setSpeed(((DoubleClam) specialList.get(i)).getSpeed() * SLOWMULTI);
-				
-				else if(specialList.get(i) instanceof HealthClam)
-					((HealthClam) specialList.get(i)).setSpeed(((HealthClam) specialList.get(i)).getSpeed() * SLOWMULTI);
+				specialList.get(i).setSpeed(specialList.get(i).getSpeed() * SLOWMULTI);
 			}
 		}
 		
@@ -539,15 +496,7 @@ public class GameScreen implements Screen {
 			
 			// Resume specials
 			for(int i = 0; i < specialList.size(); i++){
-				
-				if(specialList.get(i) instanceof SlowMoClam)
-					((SlowMoClam) specialList.get(i)).setSpeed(((SlowMoClam) specialList.get(i)).getSpeed() / SLOWMULTI);
-				
-				else if(specialList.get(i) instanceof DoubleClam)
-					((DoubleClam) specialList.get(i)).setSpeed(((DoubleClam) specialList.get(i)).getSpeed() / SLOWMULTI);
-				
-				else if(specialList.get(i) instanceof HealthClam)
-					((HealthClam) specialList.get(i)).setSpeed(((HealthClam) specialList.get(i)).getSpeed() / SLOWMULTI);
+				specialList.get(i).setSpeed(specialList.get(i).getSpeed() / SLOWMULTI);
 			}
 			
 			slowMoState = 0; // Reset Slow Mo state
