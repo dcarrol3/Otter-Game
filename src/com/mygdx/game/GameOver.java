@@ -5,7 +5,9 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -144,6 +146,17 @@ public class GameOver implements Screen {
         	dispose();
         	game.setScreen(new MainMenu(game));
         }
+        
+        // Handles back button for Android
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override public boolean keyUp(final int keycode) {
+                if (keycode == Keys.BACK) {
+                	dispose();
+                	game.setScreen(new MainMenu(game));
+                }
+                return false;
+            }
+        });
         
         // Exits game
         if(quit.isPressed())

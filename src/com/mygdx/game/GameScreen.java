@@ -6,7 +6,10 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
@@ -561,7 +564,7 @@ public class GameScreen implements Screen {
 	
 	// Sets game state
 	void gameState(){
-		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Keys.BACK)){
+		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)){
 			// Pause
 			if(state == 1){
 				state = 0;
@@ -572,6 +575,28 @@ public class GameScreen implements Screen {
 				state = 1;
 				music.play();
 			}
+		}
+		
+		// Handles Androids pause
+		else if(Gdx.app.getType() == ApplicationType.Android){
+			// Handles back button for Android
+	        Gdx.input.setInputProcessor(new InputAdapter() {
+	            @Override public boolean keyUp(final int keycode) {
+	                if (keycode == Keys.BACK) {
+	                	// Pause
+	        			if(state == 1){
+	        				state = 0;
+	        				music.pause(); // Pause music
+	        			}
+	        			// Resume
+	        			else if(state == 0){
+	        				state = 1;
+	        				music.play();
+	        			}
+	                }
+	                return false;
+	            }
+	        });
 		}
 	}
 	

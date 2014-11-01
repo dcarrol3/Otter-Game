@@ -271,13 +271,15 @@ class Player {
 	    // Android
 		case Android:
 			
-			float x = game.convertX(Gdx.input.getX());
-			float y = game.convertY(Gdx.input.getY());
-			
-			xCoord = x - SPRITEWIDTH;
-			// Y coord: fixes coordinate flip 
-			yCoord = (game.getHeight() - y);
-			boundries();
+			if(Gdx.input.isTouched()){
+				float x = game.convertX(Gdx.input.getX());
+				float y = game.convertY(Gdx.input.getY());
+				
+				xCoord = x - SPRITEWIDTH;
+				// Y coord: fixes coordinate flip 
+				yCoord = (game.getHeight() - y);
+				boundries();
+			}
 			
 			break;
 			

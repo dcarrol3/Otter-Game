@@ -6,6 +6,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 
 public class MainMenu implements Screen {
@@ -53,8 +54,8 @@ public class MainMenu implements Screen {
         	game.setScreen(new Options(game));
         }
         // Checks if quit is hit and exits game
-        if(quitButton.isPressed())
-        	System.exit(0);	
+        if(quitButton.isPressed() || Gdx.input.isKeyPressed(Keys.BACK))
+        	System.exit(0);
     }
 
 
