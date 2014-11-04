@@ -23,8 +23,8 @@ class Player {
 	Rectangle hitBox;	  					// Set hitbox for player
 	public final byte MAXLIVES = 5;			// Max lives
 	public final byte INVINTIME = 1;		// Time in seconds for otter to be invincible
-	public final short SPRITEWIDTH = 179; 	// Player sprite width (x)
-	public final byte SPRITEHEIGHT = 50;	// Player sprite height (y)
+	public final short SPRITEWIDTH = 151; 	// Player sprite width (x)
+	public final byte SPRITEHEIGHT = 40;	// Player sprite height (y)
 	public final double  SHOTDELAY = .1;    // Delay between shots in seconds
 	private Texture playerSprite; 			// Player texture
 	private float speed = 4.0f; 			// Player speed
@@ -57,7 +57,7 @@ class Player {
 		
 		// construct hitbox
 		hitBox = new Rectangle(); 
-		hitBox.setSize(120, 30); // Set size of rectangle
+		hitBox.setSize((SPRITEWIDTH - 30), (SPRITEHEIGHT - 10)); // Set size of rectangle
 		hitBox.setPosition(xCoord, yCoord); // Match loaction with shark
 		
 		// Build lives

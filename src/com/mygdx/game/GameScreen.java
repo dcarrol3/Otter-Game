@@ -39,6 +39,7 @@ public class GameScreen implements Screen {
 	public final float SLOWMULTI = 0.5f; 	// Multiplier for slow mo
 	public final float SLOWTIME = 15.0f; 	// Time for SlowMo bonus 
 	private float playTimeSec = 0.0f; 	  	// Game timer seconds
+	private int playTimeMin = 0;			// Game timer minutes
 	private float levelTimeCount;			// Helper for keeping track of time
 	private int level;						// Level number
 	private int state;						// Controls game state 0 for paused, 1 for running
@@ -556,10 +557,10 @@ public class GameScreen implements Screen {
 	// Handles playtime and converting it to string
 	String playTime(){
 		
-			int playTimeMin = (int) (playTimeSec / 60);
-			int secondsOffset = playTimeMin;
+			playTimeMin = (int) (playTimeSec / 60);
 			
-		return "Time: " + playTimeMin + (Math.round((playTimeSec - (60 * secondsOffset))) < 10? ":0" : ":") + Math.round((playTimeSec - (60 * secondsOffset)));
+		return "Time: " + playTimeMin + (Math.round((playTimeSec - (60 * playTimeMin))) < 10? ":0" : ":") 
+				+ Math.round((playTimeSec - (60 * playTimeMin)));
 	}
 	
 	// Sets game state
