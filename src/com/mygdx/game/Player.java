@@ -128,7 +128,7 @@ class Player {
 	
 	// Displays life
 	void displayLife(){
-		int lifex = 50;
+		int lifex = 30;
 		
 		for (int i = 0; i < lives; i++) {
 			lifeArray.get(i).display(lifex);

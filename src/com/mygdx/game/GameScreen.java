@@ -9,9 +9,9 @@ import java.util.Random;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,6 +22,7 @@ public class GameScreen implements Screen {
 	final OtterGame game;
 	private OrthographicCamera camera;		// Main game camera
 	private Texture background;				// Background texture
+	private Texture slowmo;					// Slow Mo texture
 	private Player player;					// Player or otter
 	private Music music;					// Background music
 	private Random rand;					// Random
@@ -79,6 +80,7 @@ public class GameScreen implements Screen {
 		
 		// Textures
 		background = new Texture("gamebackground.png");
+		slowmo = new Texture("slowmo.png");
 		
 		// Sounds
 		music = Gdx.audio.newMusic(Gdx.files.internal("runaway.mp3")); // Load in music file
@@ -202,14 +204,14 @@ public class GameScreen implements Screen {
 	// Handles display for GameScreen
 	void display(){
 		game.batch.draw(background, 0, 0); // Background
-	    game.font.draw(game.batch, ("Ammo: " + player.getAmmo()), 30, 380);
-	    game.font.draw(game.batch, ("Score: " + player.getScore()), 100, 380);
+	    game.toonyFont.draw(game.batch, ("Ammo: " + player.getAmmo()), 30, 380);
+	    game.toonyFont.draw(game.batch, ("Score: " + player.getScore()), 110, 380);
 	    // Double bonus
-	    if(player.getScoreOffset() > 1){game.font.draw(game.batch, (("x" + player.getScoreOffset())), 170, 380);}
+	    if(player.getScoreOffset() > 1){game.doubleFont.draw(game.batch, (("x" + player.getScoreOffset())), 192, 382);}
 	    // SlowMo
-	    if(slowMoState == 1){game.font.draw(game.batch, "Slow-Mo", 190, 450);}
-	    game.font.draw(game.batch, playTime(), 100, 450);
-	    game.font.draw(game.batch, ("Level: " + level), 30, 450);
+	    if(slowMoState == 1){game.batch.draw(slowmo, 185, 433);}
+	    game.toonyFont.draw(game.batch, playTime(), 100, 450);
+	    game.toonyFont.draw(game.batch, ("Level: " + level), 30, 450);
 	    displayBullets();	// Displays bullets
 	    displaySharks(); 	// Displays shark sprites
 	    displayClams();		// Displays clam sprites
@@ -615,19 +617,19 @@ public class GameScreen implements Screen {
 	// Builds pause menu
 	void buildPause(){
 		// Create quit button
-		quit = new Button(game, "quit_np.png", 84, 43, 400-(84/2), 150);
-        quit.setPressedTexture("quit_p.png");
+		quit = new Button(game, "quitPause_np.png", 93, 30, 400-(93/2), 150);
+        quit.setPressedTexture("quitPause_p.png");
         
         // Create main menu button
-        menu = new Button(game, "menu_np.png", 136, 43, 400-(136/2), 200);
-        menu.setPressedTexture("menu_p.png");
+        menu = new Button(game, "pauseMenu_np.png", 110, 28, 400-(110/2), 200);
+        menu.setPressedTexture("pauseMenu_p.png");
         
         // Create play again button
-        restart = new Button(game, "replay_np.png", 132, 43, 400-(132/2), 250);
-        restart.setPressedTexture("replay_p.png");
+        restart = new Button(game, "replayPause_np.png", 153, 47, 400-(153/2), 240);
+        restart.setPressedTexture("replayPause_p.png");
         
         // Create resume button
-        resume = new Button(game, "resume_np.png", 113, 43, 400-(113/2), 300);
+        resume = new Button(game, "resume_np.png", 162, 30, 400-(162/2), 305);
         resume.setPressedTexture("resume_p.png");
 	}
 	

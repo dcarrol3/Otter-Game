@@ -5,13 +5,16 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 
 public class MainMenu implements Screen {
 	
 	final OtterGame game;
+	private Texture background;		// Main menu background
+	private Texture title;			// Main menu title
 	private Button startButton;		// Main start button
 	private Button quitButton;		// Menu quit button
 	private Button optionsButton;	// Menu options button
@@ -19,6 +22,9 @@ public class MainMenu implements Screen {
 	public MainMenu(final OtterGame gam){
 		
 		game = gam;
+		
+		background = new Texture("menuBackground.png");
+		title = new Texture("title.png");
 		
 		// Capture back button - Android/iOS
 		Gdx.input.setCatchBackKey(true); 
@@ -41,6 +47,8 @@ public class MainMenu implements Screen {
         
         // Sprite batch
         game.batch.begin();
+        game.batch.draw(background, 0, 0); // Background - Must be at top
+        game.batch.draw(title, 0, 0);      // Title - Must be at top below background
         displaySprites();
         game.batch.end();
         
@@ -51,7 +59,7 @@ public class MainMenu implements Screen {
         }
         if (optionsButton.isPressed()){
         	dispose();
-        	game.setScreen(new Options(game));
+        	game.setScreen(new Options(game, background));
         }
         // Checks if quit is hit and exits game
         if(quitButton.isPressed() || Gdx.input.isKeyPressed(Keys.BACK))
@@ -88,12 +96,7 @@ public class MainMenu implements Screen {
 	}
 	
 	void displaySprites(){
-		 game.font.draw(game.batch, ("Conx: " + game.convertX(100)), 108, 360);
-		 game.font.draw(game.batch, ("Cony: " + game.convertY(800)), 108, 340);
-		 game.font.draw(game.batch, ("xCoord: " + Gdx.input.getX()), 108, 320);
-		 game.font.draw(game.batch, ("yCoord: " + Gdx.input.getY()), 108, 300);
-		 game.font.draw(game.batch, "Otter Game ", 108, 180);
-		 game.font.draw(game.batch, "High Score: " + Prefs.getHighScore(), 353, 180); // Displays high score
+		 game.toonyFontLarge.draw(game.batch, "High Score: " + Prefs.getHighScore(), 330, 205); // Displays high score
 		 startButton.display();
 		 quitButton.display();
 		 optionsButton.display();
@@ -102,15 +105,15 @@ public class MainMenu implements Screen {
 	// Creates buttons
 	void createButtons(){
 		// Create start button
-        startButton = new Button(game, "start_np.png", 84, 43, 100, 100);
+        startButton = new Button(game, "start_np.png", 127, 120, 100, 50);
         startButton.setPressedTexture("start_p.png");
         
         // Create quit button
-        quitButton = new Button(game, "quit_np.png", 84, 43, 600, 100);
+        quitButton = new Button(game, "quit_np.png", 127, 120, 600, 50);
         quitButton.setPressedTexture("quit_p.png");
         
         // Create options button
-        optionsButton = new Button(game, "options_np.png", 110, 43, 343, 100);
+        optionsButton = new Button(game, "options_np.png", 127, 120, 343, 50);
         optionsButton.setPressedTexture("options_p.png");
 	}
 }

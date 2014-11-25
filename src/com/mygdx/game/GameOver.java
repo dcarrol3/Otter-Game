@@ -5,9 +5,9 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,9 +17,10 @@ public class GameOver implements Screen {
 	final OtterGame game;
 	OrthographicCamera camera;	// Camera
 	Button menu;				// Main menu button
-	Button quit;				// Quit button
+	Button quitButton;				// Quit button
 	Button replay;				// Play again button
-	Texture background;			// background
+	private Texture background;	// background
+	private Texture gameover;   // Game over title 
 	private int score;			// Score
 	private int oldScore;		// Previous score
 	String scoreDisplay;		// Score to string
@@ -41,6 +42,7 @@ public class GameOver implements Screen {
         
         // Textures
      	background = new Texture("gamebackground.png");
+     	gameover = new Texture("gameovertitle.png");
      	
      	// Update score - must be at end of constructor
      	Prefs.setHighScore(score);
@@ -59,6 +61,7 @@ public class GameOver implements Screen {
         // Sprite display - Background MUST be first
         game.batch.begin();
         game.batch.draw(background, 0, 0); // Background
+        game.batch.draw(gameover, -20, 0);   // Title, MUST be right after background
         display();
         game.batch.end();
         
@@ -100,19 +103,18 @@ public class GameOver implements Screen {
 	@Override
 	public void dispose() {
 		menu.dispose();
-		quit.dispose();
+		quitButton.dispose();
 		replay.dispose();
 		background.dispose();
 	}
 	
 	// Displays sprites
 	void display(){
-		 game.font.draw(game.batch, "Game Over", 360, 210);
 		 displayHighScore(); // Displays high score - 240
-		 game.font.draw(game.batch, scoreDisplay, 360, 270);
-		 game.font.draw(game.batch, timeDisplay, 360, 330);
-		 game.font.draw(game.batch, levelDisplay, 360, 300);
-		 quit.display();
+		 game.toonyFont.draw(game.batch, scoreDisplay, 360, 270);
+		 game.toonyFont.draw(game.batch, timeDisplay, 360, 350);
+		 game.toonyFont.draw(game.batch, levelDisplay, 360, 310);
+		 quitButton.display();
 		 replay.display();
 		 menu.display();
 	}
@@ -120,15 +122,15 @@ public class GameOver implements Screen {
 	// Creates buttons
 	private void buttons(){
 		// Create quit button
-        quit = new Button(game, "quit_np.png", 84, 43, 600, 100);
-        quit.setPressedTexture("quit_p.png");
+        quitButton = new Button(game, "quit_np.png", 127, 120, 600, 50);
+        quitButton.setPressedTexture("quit_p.png");
         
         // Create play again button
-        replay = new Button(game, "replay_np.png", 132, 43, 350, 100);
+        replay = new Button(game, "replay_np.png", 127, 120, 100, 50);
         replay.setPressedTexture("replay_p.png");
         
         // Create main menu button
-        menu = new Button(game, "menu_np.png", 136, 43, 100, 100);
+        menu = new Button(game, "menu_np.png", 127, 120, 343, 50);
         menu.setPressedTexture("menu_p.png");
 	}
 	
@@ -159,7 +161,7 @@ public class GameOver implements Screen {
         });
         
         // Exits game
-        if(quit.isPressed())
+        if(quitButton.isPressed())
         	System.exit(0);
 	}
 	
@@ -177,9 +179,9 @@ public class GameOver implements Screen {
 	private void displayHighScore(){
 		
 		if(score > oldScore)
-			game.font.draw(game.batch, "NEW High Score! - " + score, 360, 240);
+			game.toonyFont.draw(game.batch, "NEW High Score!: " + score, 360, 230);
 		else
-			game.font.draw(game.batch, "High Score: " + oldScore, 360, 240);
+			game.toonyFont.draw(game.batch, "High Score: " + oldScore, 360, 230);
 	
 	}
 }
