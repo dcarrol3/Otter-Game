@@ -52,6 +52,6 @@ public class Prefs {
 		if (!saveFile.contains("SoundsVolume")) {
 			saveFile.putFloat("SoundsVolume", 1.0f);
 		}
-		
+		Prefs.saveFile.flush();	// Saves the save file
 	}
 }
