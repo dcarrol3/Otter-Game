@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class Button {
 	
 	final OtterGame game;
-	private Sound sound;		// Button sound
+	protected Sound sound;		// Button sound
 	protected Texture button;	// Main button Texture
 	private Texture highlightedTexture; // If texture is highlighted
 	protected float height;		// Button height

@@ -276,7 +276,7 @@ class Player {
 				float y = game.convertY(Gdx.input.getY());
 				
 				xCoord = x - SPRITEWIDTH;
-				// Y coord: fixes coordinate flip 
+				// Y coord: fixes coordinate flip
 				yCoord = (game.getHeight() - y);
 				boundries();
 			}

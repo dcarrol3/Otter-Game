@@ -7,12 +7,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Options implements Screen{
 	
 	final OtterGame game;
+	private Music music;
 	private Button back;				// Back to previous screen
 	private MuteButton mute;			// Mute in game music
 	private SliderButton musicSlider;	// Volume Slider
@@ -25,6 +27,11 @@ public class Options implements Screen{
 		background = back;
 		
 		buildButtons();
+		
+		music = Gdx.audio.newMusic(Gdx.files.internal("runaway.mp3")); // Load in music file
+		music.setVolume(Prefs.getMusicVolume());
+		music.play(); // Play music
+		music.setLooping(true); // Sets music to loop
 		
 	}
 	
@@ -44,6 +51,9 @@ public class Options implements Screen{
 		mute.swapMute();
 		musicSlider.moveButton(true);
 		soundSlider.moveButton(true);
+		
+		// Handle consistant music volume
+		music.setVolume(Prefs.getMusicVolume());
 		
 		// Display screen
 		game.batch.begin();
@@ -86,6 +96,7 @@ public class Options implements Screen{
 
 	@Override
 	public void dispose() {
+		music.stop();
 		back.dispose();
 		mute.dispose();		
 	}

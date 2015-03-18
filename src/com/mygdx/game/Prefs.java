@@ -11,7 +11,7 @@ public class Prefs {
 	private static Preferences saveFile = Gdx.app.getPreferences("OtterGame"); // Options/Score file
 	
 	public static float getMusicVolume(){
-		return  saveFile.getFloat("MusicVolume");
+		return  Prefs.saveFile.getFloat("MusicVolume");
 	}
 	
 	public static void setMusicVolume(float v){
@@ -20,16 +20,16 @@ public class Prefs {
 	}
 	
 	public static int getHighScore(){
-		return saveFile.getInteger("HighScore");
+		return Prefs.saveFile.getInteger("HighScore");
 	}
 	
 	public static void setHighScore(int score){
-		saveFile.putInteger("HighScore", score);
+		Prefs.saveFile.putInteger("HighScore", score);
 		Prefs.saveFile.flush();	// Saves the save file
 	}
 	
 	public static float getSoundVolume(){
-		return  saveFile.getFloat("SoundVolume");
+		return  Prefs.saveFile.getFloat("SoundVolume");
 	}
 	
 	public static void setSoundVolume(float sv){
@@ -42,15 +42,17 @@ public class Prefs {
 		
 		// Creates volume in file
 		if (!saveFile.contains("MusicVolume")) {
-			saveFile.putFloat("MusicVolume", 1.0f);
+			Prefs.saveFile.putFloat("MusicVolume", 1.0f);
 		}
+		
+		// Creates volume in file
+		if (!saveFile.contains("SoundVolume")) {
+			Prefs.saveFile.putFloat("SoundVolume", 1.0f);
+		}
+		
 		// Creates High score
 		if (!saveFile.contains("HighScore")){
-			saveFile.putInteger("HighScore", 0);
-		}
-		// Creates volume in file
-		if (!saveFile.contains("SoundsVolume")) {
-			saveFile.putFloat("SoundsVolume", 1.0f);
+			Prefs.saveFile.putInteger("HighScore", 0);
 		}
 		Prefs.saveFile.flush();	// Saves the save file
 	}

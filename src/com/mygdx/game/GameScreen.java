@@ -86,6 +86,7 @@ public class GameScreen implements Screen {
 		music = Gdx.audio.newMusic(Gdx.files.internal("runaway.mp3")); // Load in music file
 		music.setVolume(Prefs.getMusicVolume());
 		music.play(); // Play music
+		music.setLooping(true); // Sets music to looping
 		 
 		// Camera
 		camera = new OrthographicCamera();
