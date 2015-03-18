@@ -16,6 +16,7 @@ public class Options implements Screen{
 	final OtterGame game;
 	private Music music;
 	private Button back;				// Back to previous screen
+	private Button previewButton;		// Handles preview
 	private MuteButton mute;			// Mute in game music
 	private SliderButton musicSlider;	// Volume Slider
 	private SliderButton soundSlider;	// Sound effects slider
@@ -23,14 +24,12 @@ public class Options implements Screen{
 	
 	Options(final OtterGame gam, Texture back){
 		game = gam;
-		
 		background = back;
 		
 		buildButtons();
 		
 		music = Gdx.audio.newMusic(Gdx.files.internal("runaway.mp3")); // Load in music file
 		music.setVolume(Prefs.getMusicVolume());
-		music.play(); // Play music
 		music.setLooping(true); // Sets music to loop
 		
 	}
@@ -51,6 +50,7 @@ public class Options implements Screen{
 		mute.swapMute();
 		musicSlider.moveButton(true);
 		soundSlider.moveButton(true);
+		preview();
 		
 		// Handle consistant music volume
 		music.setVolume(Prefs.getMusicVolume());
@@ -65,40 +65,26 @@ public class Options implements Screen{
 	}
 
 	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void show() {}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void hide() {}
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
 	@Override
 	public void dispose() {
 		music.stop();
 		back.dispose();
-		mute.dispose();		
+		mute.dispose();
+		previewButton.dispose();
 	}
 	
 	private void logic(){
@@ -152,6 +138,16 @@ public class Options implements Screen{
 		musicSlider.setPosOnBarH(Prefs.getMusicVolume());
 		soundSlider.setPosOnBarH(Prefs.getSoundVolume());
 	}
+	
+	// Handles music state
+	private void preview(){
+		
+		// isPressed must be checked last to avoid double checks
+		if(!(music.isPlaying()) && previewButton.isPressed())
+			music.play(); 
+		else if(music.isPlaying() && previewButton.isPressed())
+			music.pause();
+	};
 
 	
 	private void display(){
@@ -159,6 +155,12 @@ public class Options implements Screen{
 		mute.display();
 		musicSlider.display();
 		soundSlider.display();
+		
+		// Display for preview button
+		if(music.isPlaying())
+			previewButton.displayPressed();
+		else
+			previewButton.displayNotPressed();
 	}
 	
 	private void buildButtons(){
@@ -174,7 +176,12 @@ public class Options implements Screen{
         soundSlider.setPosOnBarH(Prefs.getSoundVolume());
         
         // Create mute button
-        mute = new MuteButton(game, 690, 410);
+        mute = new MuteButton(game, 685, 403);
+        
+        // Create preview buttons
+        previewButton = new Button(game, "previewoff.png", 227, 85, 550, 30);
+        previewButton.setPressedTexture("previewon.png");
+        
         
 	}
 }

@@ -121,9 +121,19 @@ public class Button {
 	void display(){
 		// If isHighlighted is true and it's running on desktop
 		if(isHighlighted())
-			game.batch.draw(highlightedTexture, xCoord, yCoord);
+			displayPressed();
 		else
-			game.batch.draw(button, xCoord, yCoord);
+			displayNotPressed();
+	}
+	
+	// For only pressed texture to always display
+	void displayPressed(){
+		game.batch.draw(highlightedTexture, xCoord, yCoord);
+	}
+	
+	// For only Non-Pressed texture to display
+	void displayNotPressed(){
+		game.batch.draw(button, xCoord, yCoord);
 	}
 	
 	// Kills texture objects
