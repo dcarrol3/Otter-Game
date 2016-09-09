@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/doni/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype/1.9.4/8816dd669b8ca09e7d5e9575807e92c4318f708/gdx-freetype-1.9.4.jar"
+        jumboMode="true"
+        revision="24.0.0"
+        sha1="08816dd669b8ca09e7d5e9575807e92c4318f708">
+        <dex dex="/home/doni/Development/OtterGame/android/build/intermediates/transforms/dex/debug/folders/1000/10/gdx-freetype-1.9.4_5687d579a37a5fb96e7f8d12461801756f665031/classes.dex" />
+    </item>
+    <item
+        jar="/home/doni/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-box2d/1.9.4/98a0d25c9f0637fecac6e4aacf7287aa635964f5/gdx-box2d-1.9.4.jar"
+        jumboMode="true"
+        revision="24.0.0"
+        sha1="98a0d25c9f0637fecac6e4aacf7287aa635964f5">
+        <dex dex="/home/doni/Development/OtterGame/android/build/intermediates/transforms/dex/debug/folders/1000/10/gdx-box2d-1.9.4_2df6411603961b2079f24a64418d9c55cde08137/classes.dex" />
+    </item>
+    <item
+        jar="/home/doni/Development/OtterGame/android/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="24.0.0"
+        sha1="3b16a4e0424df727b712c17956612497d7ca8457">
+        <dex dex="/home/doni/Development/OtterGame/android/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_edcaae03f2dbd0c6a2af3e3f65ffb3fbf4b23787/classes.dex" />
+    </item>
+    <item
+        jar="/home/doni/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.4/4b4b7962d1bc75af0438f5c81ec1010557bc9ee5/gdx-1.9.4.jar"
+        jumboMode="true"
+        revision="24.0.0"
+        sha1="4b4b7962d1bc75af0438f5c81ec1010557bc9ee5">
+        <dex dex="/home/doni/Development/OtterGame/android/build/intermediates/transforms/dex/debug/folders/1000/10/gdx-1.9.4_668846811fd44a9bbfd00bcfde0323065c0c2aa9/classes.dex" />
+    </item>
+    <item
+        jar="/home/doni/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-android/1.9.4/194b33382d6d58fad031521ba3331d926c476c9b/gdx-backend-android-1.9.4.jar"
+        jumboMode="true"
+        revision="24.0.0"
+        sha1="194b33382d6d58fad031521ba3331d926c476c9b">
+        <dex dex="/home/doni/Development/OtterGame/android/build/intermediates/transforms/dex/debug/folders/1000/10/gdx-backend-android-1.9.4_58a0627d49dd9fbeb2fe90d3e86db7470cacbdb4/classes.dex" />
+    </item>
+    <item
+        jar="/home/doni/Development/OtterGame/android/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="24.0.0"
+        sha1="78bf9427753b8b54a7e9befec67d470f0e931df6">
+        <dex dex="/home/doni/Development/OtterGame/android/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_9e667020ac9caef4057748efc78bc04d2621bb3a/classes.dex" />
+    </item>
+
+</items>

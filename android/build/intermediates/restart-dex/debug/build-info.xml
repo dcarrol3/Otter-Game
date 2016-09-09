@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    abi="x86"
+    api-level="23"
+    density="560dpi"
+    format="7"
+    timestamp="5482529655570"
+    token="7371911105330966000" >
+
+    <task
+        name="javac"
+        duration="35" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="155" />
+    <task
+        name="verifier"
+        duration="3" />
+
+    <artifact
+        location="/home/doni/Development/OtterGame/android/build/outputs/apk/android-debug.apk"
+        type="MAIN" />
+
+    <build timestamp="5482529655570" >
+        <artifact
+            location="/home/doni/Development/OtterGame/android/build/outputs/apk/android-debug.apk"
+            type="MAIN" />
+    </build>
+
+</instant-run>
